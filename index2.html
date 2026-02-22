@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumFast</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="QuantumFast" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.12);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border-soft: rgba(148, 163, 184, 0.3);
+      --protein-color: #22c55e;
+      --carbs-color: #f59e0b;
+      --fats-color: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+      gap: 20px;
+    }
+
+    /* ── HERO ───────────────────────────── */
+    .hero {
+      max-width: 960px;
+      width: 100%;
+      border-radius: 28px;
+      padding: 32px 24px 28px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.75), 0 0 0 1px rgba(15,23,42,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .hero { flex-direction: row; padding: 40px 40px 32px; gap: 32px; }
+    }
+
+    .hero-left { flex: 3; }
+
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: 12px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+
+    .hero-pill-dot {
+      width: 8px; height: 8px; border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(34,197,94,0.9);
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 44px);
+      line-height: 1.05; margin-bottom: 14px;
+    }
+
+    .highlight { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 15px; line-height: 1.6;
+      color: var(--text-muted); max-width: 34rem; margin-bottom: 22px;
+    }
+
+    .hero-cta-row {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    }
+
+    .btn-primary {
+      border: none; border-radius: 999px; padding: 11px 20px;
+      background: var(--accent); color: #022c22; font-weight: 600;
+      font-size: 14px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 14px 30px rgba(34,197,94,0.45);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(34,197,94,0.55);
+    }
+
+    .btn-secondary {
+      border-radius: 999px; padding: 10px 18px;
+      border: 1px solid var(--border-soft); background: transparent;
+      color: var(--text-muted); font-size: 13px;
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer;
+    }
+
+    .hero-meta {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted);
+    }
+
+    .hero-right {
+      flex: 2; display: flex; flex-direction: column;
+      gap: 12px; font-size: 12px; color: var(--text-muted);
+    }
+
+    .hero-card {
+      border-radius: 18px; padding: 14px 14px 12px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.08), rgba(15,23,42,0.96));
+    }
+
+    .hero-card-title {
+      font-size: 12px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 6px;
+    }
+
+    .hero-card-main {
+      display: flex; align-items: baseline;
+      justify-content: space-between; gap: 8px;
+    }
+
+    .hero-number { font-size: 24px; font-weight: 600; }
+
+    .hero-badge {
+      font-size: 11px; padding: 4px 8px; border-radius: 999px;
+      background: rgba(22,163,74,0.18); color: var(--accent);
+    }
+
+    .hero-mini {
+      display: flex; justify-content: space-between;
+      margin-top: 8px; font-size: 11px;
+    }
+
+    /* ── QUICK SETUP CARD ───────────────── */
+    .setup-card {
+      max-width: 960px; width: 100%;
+      padding: 20px 22px 22px; border-radius: 22px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .section-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 12px;
+    }
+
+    .form-grid {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 4px; }
+
+    .form-field label { font-size: 11px; color: var(--text-muted); }
+
+    .form-field select,
+    .form-field input {
+      padding: 7px 10px; border-radius: 10px;
+      border: 1px solid #374151;
+      background: #020617; color: #e5e7eb;
+      font-size: 13px; outline: none;
+    }
+
+    .form-field input { width: 80px; }
+    #age { width: 70px; }
+
+    .macro-result-row {
+      display: none; margin-top: 14px;
+      padding: 12px 14px; border-radius: 14px;
+      border: 1px solid rgba(34,197,94,0.25);
+      background: rgba(34,197,94,0.06);
+    }
+
+    .macro-result-row .section-label { margin-bottom: 6px; }
+
+    .macro-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+    }
+
+    .macro-pill {
+      font-size: 12px; padding: 5px 12px;
+      border-radius: 999px; font-weight: 600;
+    }
+
+    .pill-cal  { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .pill-pro  { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .pill-carb { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .pill-fat  { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+    /* ── MEAL PLAN SECTION ──────────────── */
+    .meal-section {
+      display: none;
+      max-width: 960px; width: 100%;
+      flex-direction: column; gap: 14px;
+    }
+
+    .meal-section-header {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+
+    .meal-section-title {
+      font-size: 18px; font-weight: 600;
+    }
+
+    .macro-bar-row {
+      display: flex; gap: 6px; align-items: center;
+      font-size: 11px; color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .bar-label { min-width: 46px; }
+
+    .bar-track {
+      width: 90px; height: 5px; border-radius: 999px;
+      background: rgba(148,163,184,0.15); overflow: hidden;
+    }
+
+    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+
+    .bar-pro  .bar-fill { background: var(--protein-color); }
+    .bar-carb .bar-fill { background: var(--carbs-color); }
+    .bar-fat  .bar-fill { background: var(--fats-color); }
+
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .meal-card {
+      border-radius: 18px; padding: 16px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.06), rgba(15,23,42,0.97));
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    .meal-time-badge {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.12em; padding: 3px 10px;
+      border-radius: 999px; width: fit-content;
+    }
+
+    .badge-breakfast { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .badge-lunch     { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .badge-snack     { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-dinner    { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+    .meal-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+
+    .meal-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    .meal-macros {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px;
+    }
+
+    .meal-macro-tag {
+      font-size: 11px; padding: 3px 8px; border-radius: 999px;
+    }
+
+    .tag-pro  { background: rgba(34,197,94,0.12);  color: #22c55e; }
+    .tag-carb { background: rgba(245,158,11,0.12); color: #fbbf24; }
+    .tag-fat  { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    .tag-kcal { background: rgba(249,115,22,0.12); color: #fb923c; }
+
+    .meal-total-row {
+      padding: 12px 14px; border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.8);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      font-size: 12px; align-items: center;
+    }
+
+    .total-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text-muted); margin-right: 4px;
+    }
+
+    .total-ok   { color: var(--accent); }
+    .total-over { color: #f87171; }
+    .total-warn { color: #fbbf24; }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ───────────────────────────── -->
+  <main class="hero">
+    <section class="hero-left">
+      <div class="hero-pill">
+        <span class="hero-pill-dot"></span>
+        NEXT-GEN FASTING & FUEL
+      </div>
+      <h1>
+        Welcome to <span class="highlight">QuantumFast</span>.
+        Let's build your next generation of healthy.
+      </h1>
+      <p class="hero-sub">
+        Track your fasts, protein, and hydration in one focused space.
+        Designed for high performers who want science-backed clarity, not noise.
+      </p>
+      <div class="hero-cta-row">
+        <button class="btn-primary" id="hero-start-btn">
+          Start my first fast <span>⟶</span>
+        </button>
+        <button class="btn-secondary" id="hero-preview-btn">
+          Preview today's plan
+        </button>
+        <span class="hero-meta">No accounts yet. Your data stays on this device in v1.</span>
+      </div>
+    </section>
+
+    <aside class="hero-right">
+      <div class="hero-card">
+        <div class="hero-card-title">Today's Fast</div>
+        <div class="hero-card-main">
+          <div>
+            <div class="hero-number">16:00</div>
+            <div style="font-size:11px;color:var(--text-muted);">Goal • Intermittent</div>
+          
