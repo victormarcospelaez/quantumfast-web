@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumFast</title>
-
-  <!-- iOS: que se vea como app a pantalla completa al añadir al home -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="QuantumFast" />
@@ -20,13 +18,12 @@
       --text-muted: #9ca3af;
       --card-bg: rgba(15, 23, 42, 0.85);
       --border-soft: rgba(148, 163, 184, 0.3);
+      --protein-color: #22c55e;
+      --carbs-color: #f59e0b;
+      --fats-color: #3b82f6;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -35,11 +32,13 @@
       background: var(--bg-gradient);
       color: var(--text-main);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      padding: 24px 16px 48px;
+      gap: 20px;
     }
 
+    /* ── HERO ───────────────────────────── */
     .hero {
       max-width: 960px;
       width: 100%;
@@ -47,190 +46,280 @@
       padding: 32px 24px 28px;
       background: var(--card-bg);
       border: 1px solid var(--border-soft);
-      box-shadow:
-        0 24px 60px rgba(15, 23, 42, 0.75),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.75), 0 0 0 1px rgba(15,23,42,0.9);
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
     @media (min-width: 768px) {
-      .hero {
-        flex-direction: row;
-        padding: 40px 40px 32px;
-        gap: 32px;
-      }
+      .hero { flex-direction: row; padding: 40px 40px 32px; gap: 32px; }
     }
 
-    .hero-left {
-      flex: 3;
-    }
+    .hero-left { flex: 3; }
 
     .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: 12px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 14px;
     }
 
     .hero-pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
+      width: 8px; height: 8px; border-radius: 999px;
       background: var(--accent);
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
+      box-shadow: 0 0 18px rgba(34,197,94,0.9);
     }
 
     h1 {
       font-size: clamp(32px, 5vw, 44px);
-      line-height: 1.05;
-      margin-bottom: 14px;
+      line-height: 1.05; margin-bottom: 14px;
     }
 
-    .highlight {
-      color: var(--accent);
-    }
+    .highlight { color: var(--accent); }
 
     .hero-sub {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--text-muted);
-      max-width: 34rem;
-      margin-bottom: 22px;
+      font-size: 15px; line-height: 1.6;
+      color: var(--text-muted); max-width: 34rem; margin-bottom: 22px;
     }
 
     .hero-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
     }
 
     .btn-primary {
-      border: none;
-      border-radius: 999px;
-      padding: 11px 20px;
-      background: var(--accent);
-      color: #022c22;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.45);
+      border: none; border-radius: 999px; padding: 11px 20px;
+      background: var(--accent); color: #022c22; font-weight: 600;
+      font-size: 14px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 14px 30px rgba(34,197,94,0.45);
       transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.55);
+      box-shadow: 0 18px 40px rgba(34,197,94,0.55);
     }
 
     .btn-secondary {
-      border-radius: 999px;
-      padding: 10px 18px;
-      border: 1px solid var(--border-soft);
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      border-radius: 999px; padding: 10px 18px;
+      border: 1px solid var(--border-soft); background: transparent;
+      color: var(--text-muted); font-size: 13px;
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer;
     }
 
     .hero-meta {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted);
     }
 
     .hero-right {
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      font-size: 12px;
-      color: var(--text-muted);
+      flex: 2; display: flex; flex-direction: column;
+      gap: 12px; font-size: 12px; color: var(--text-muted);
     }
 
     .hero-card {
-      border-radius: 18px;
-      padding: 14px 14px 12px;
+      border-radius: 18px; padding: 14px 14px 12px;
       border: 1px solid var(--border-soft);
-      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), rgba(15, 23, 42, 0.96));
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.08), rgba(15,23,42,0.96));
     }
 
     .hero-card-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      font-size: 12px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 6px;
     }
 
     .hero-card-main {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
+      display: flex; align-items: baseline;
+      justify-content: space-between; gap: 8px;
     }
 
-    .hero-number {
-      font-size: 24px;
-      font-weight: 600;
-    }
+    .hero-number { font-size: 24px; font-weight: 600; }
 
     .hero-badge {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(22, 163, 74, 0.18);
-      color: var(--accent);
+      font-size: 11px; padding: 4px 8px; border-radius: 999px;
+      background: rgba(22,163,74,0.18); color: var(--accent);
     }
 
     .hero-mini {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 11px;
+      display: flex; justify-content: space-between;
+      margin-top: 8px; font-size: 11px;
     }
+
+    /* ── QUICK SETUP CARD ───────────────── */
+    .setup-card {
+      max-width: 960px; width: 100%;
+      padding: 20px 22px 22px; border-radius: 22px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .section-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 12px;
+    }
+
+    .form-grid {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 4px; }
+
+    .form-field label { font-size: 11px; color: var(--text-muted); }
+
+    .form-field select,
+    .form-field input {
+      padding: 7px 10px; border-radius: 10px;
+      border: 1px solid #374151;
+      background: #020617; color: #e5e7eb;
+      font-size: 13px; outline: none;
+    }
+
+    .form-field input { width: 80px; }
+    #age { width: 70px; }
+
+    .macro-result-row {
+      display: none; margin-top: 14px;
+      padding: 12px 14px; border-radius: 14px;
+      border: 1px solid rgba(34,197,94,0.25);
+      background: rgba(34,197,94,0.06);
+    }
+
+    .macro-result-row .section-label { margin-bottom: 6px; }
+
+    .macro-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+    }
+
+    .macro-pill {
+      font-size: 12px; padding: 5px 12px;
+      border-radius: 999px; font-weight: 600;
+    }
+
+    .pill-cal  { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .pill-pro  { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .pill-carb { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .pill-fat  { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+    /* ── MEAL PLAN SECTION ──────────────── */
+    .meal-section {
+      display: none;
+      max-width: 960px; width: 100%;
+      flex-direction: column; gap: 14px;
+    }
+
+    .meal-section-header {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+
+    .meal-section-title {
+      font-size: 18px; font-weight: 600;
+    }
+
+    .macro-bar-row {
+      display: flex; gap: 6px; align-items: center;
+      font-size: 11px; color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .bar-label { min-width: 46px; }
+
+    .bar-track {
+      width: 90px; height: 5px; border-radius: 999px;
+      background: rgba(148,163,184,0.15); overflow: hidden;
+    }
+
+    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+
+    .bar-pro  .bar-fill { background: var(--protein-color); }
+    .bar-carb .bar-fill { background: var(--carbs-color); }
+    .bar-fat  .bar-fill { background: var(--fats-color); }
+
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .meal-card {
+      border-radius: 18px; padding: 16px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.06), rgba(15,23,42,0.97));
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    .meal-time-badge {
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.12em; padding: 3px 10px;
+      border-radius: 999px; width: fit-content;
+    }
+
+    .badge-breakfast { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .badge-lunch     { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .badge-snack     { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-dinner    { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+    .meal-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+
+    .meal-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    .meal-macros {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px;
+    }
+
+    .meal-macro-tag {
+      font-size: 11px; padding: 3px 8px; border-radius: 999px;
+    }
+
+    .tag-pro  { background: rgba(34,197,94,0.12);  color: #22c55e; }
+    .tag-carb { background: rgba(245,158,11,0.12); color: #fbbf24; }
+    .tag-fat  { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    .tag-kcal { background: rgba(249,115,22,0.12); color: #fb923c; }
+
+    .meal-total-row {
+      padding: 12px 14px; border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.8);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      font-size: 12px; align-items: center;
+    }
+
+    .total-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text-muted); margin-right: 4px;
+    }
+
+    .total-ok   { color: var(--accent); }
+    .total-over { color: #f87171; }
+    .total-warn { color: #fbbf24; }
   </style>
 </head>
 <body>
+
+  <!-- ── HERO ───────────────────────────── -->
   <main class="hero">
     <section class="hero-left">
       <div class="hero-pill">
         <span class="hero-pill-dot"></span>
         NEXT-GEN FASTING & FUEL
       </div>
-
       <h1>
         Welcome to <span class="highlight">QuantumFast</span>.
-        Let’s build your next generation of healthy.
+        Let's build your next generation of healthy.
       </h1>
-
       <p class="hero-sub">
         Track your fasts, protein, and hydration in one focused space.
         Designed for high performers who want science-backed clarity, not noise.
       </p>
-
       <div class="hero-cta-row">
-        <button class="btn-primary">
-          Start my first fast
-          <span>⟶</span>
+        <button class="btn-primary" id="hero-start-btn">
+          Start my first fast <span>⟶</span>
         </button>
-        <button class="btn-secondary">
-          Preview today’s plan
+        <button class="btn-secondary" id="hero-preview-btn">
+          Preview today's plan
         </button>
         <span class="hero-meta">No accounts yet. Your data stays on this device in v1.</span>
       </div>
@@ -238,11 +327,12 @@
 
     <aside class="hero-right">
       <div class="hero-card">
-        <div class="hero-card-title">Today’s Fast</div>
+        <div class="hero-card-title">Today's Fast</div>
         <div class="hero-card-main">
           <div>
             <div class="hero-number">16:00</div>
             <div style="font-size:11px;color:var(--text-muted);">Goal • Intermittent</div>
+          
           </div>
           <div class="hero-badge">Ready when you are</div>
         </div>
@@ -253,192 +343,304 @@
       </div>
 
       <div class="hero-card">
-        <div class="hero-card-title">Macros snapshot</div>
+        <div class="hero-card-title">Macros Snapshot</div>
         <div class="hero-mini">
           <span>Calories • Protein • Water</span>
           <span>Coming next: live from your profile</span>
         </div>
       </div>
     </aside>
-      <!-- FORM: quick macro setup -->
-    <section style="margin-top:24px;width:100%;">
-      <div style="
-        max-width:960px;
-        margin:0 auto;
-        padding:16px 18px 18px;
-        border-radius:18px;
-        border:1px solid rgba(148,163,184,0.35);
-        background:rgba(15,23,42,0.9);
-        color:#e5e7eb;
-        font-size:13px;">
-        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#9ca3af;margin-bottom:8px;">
-          Quick setup
-        </div>
-        <form id="macro-form" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
-          <div>
-            <label>Sex</label><br/>
-            <select id="sex" style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div>
-            <label>Age</label><br/>
-            <input id="age" type="number" value="35" min="16" max="90"
-              style="width:70px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
-          </div>
-          <div>
-            <label>Height (cm)</label><br/>
-            <input id="height" type="number" value="178"
-              style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
-          </div>
-          <div>
-            <label>Weight (kg)</label><br/>
-            <input id="weight" type="number" value="78"
-              style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
-          </div>
-          <div>
-            <label>Activity</label><br/>
-            <select id="activity"
-              style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
-              <option value="sedentary">Sedentary</option>
-              <option value="light">Light</option>
-              <option value="moderate" selected>Moderate</option>
-              <option value="high">High</option>
-              <option value="very_high">Very High</option>
-            </select>
-          </div>
-          <div>
-            <label>Goal</label><br/>
-            <select id="goal"
-              style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
-              <option value="healthy">Healthy</option>
-              <option value="build">Build</option>
-              <option value="define">Define</option>
-            </select>
-          </div>
-          <div>
-            <button type="submit" class="btn-primary">Preview today’s plan</button>
-          </div>
-        </form>
-
-        <div id="macro-result" style="margin-top:10px;display:none;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#9ca3af;margin-bottom:4px;">
-            Today’s targets
-          </div>
-          <div id="macro-text" style="font-size:13px;color:#e5e7eb;"></div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
+  <!-- ── QUICK SETUP ───────────────────── -->
+  <div class="setup-card">
+    <div class="section-label">Quick Setup</div>
+    <form id="macro-form" class="form-grid">
+      <div class="form-field">
+        <label>Sex</label>
+        <select id="sex">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Age</label>
+        <input id="age" type="number" value="35" min="16" max="90" />
+      </div>
+      <div class="form-field">
+        <label>Height (cm)</label>
+        <input id="height" type="number" value="178" />
+      </div>
+      <div class="form-field">
+        <label>Weight (kg)</label>
+        <input id="weight" type="number" value="78" />
+      </div>
+      <div class="form-field">
+        <label>Activity</label>
+        <select id="activity">
+          <option value="sedentary">Sedentary</option>
+          <option value="light">Light</option>
+          <option value="moderate" selected>Moderate</option>
+          <option value="high">High</option>
+          <option value="very_high">Very High</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Goal</label>
+        <select id="goal">
+          <option value="healthy">Healthy</option>
+          <option value="build">Build</option>
+          <option value="define">Define</option>
+        </select>
+      </div>
+      <div class="form-field" style="justify-content:flex-end;">
+        <button type="submit" class="btn-primary">Preview today's plan</button>
+      </div>
+    </form>
+
+    <div class="macro-result-row" id="macro-result">
+      <div class="section-label">Today's Targets</div>
+      <div class="macro-pills">
+        <span class="macro-pill pill-cal"  id="r-cal">–</span>
+        <span class="macro-pill pill-pro"  id="r-pro">–</span>
+        <span class="macro-pill pill-carb" id="r-carb">–</span>
+        <span class="macro-pill pill-fat"  id="r-fat">–</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MEAL PLAN ──────────────────────── -->
+  <section class="meal-section" id="meal-section">
+
+    <div class="meal-section-header">
+      <div class="meal-section-title">
+        Today's <span class="highlight">Meal Plan</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div class="macro-bar-row bar-pro">
+          <span class="bar-label" style="color:#22c55e;">Protein</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-pro"></div></div>
+          <span id="bar-pro-txt">0 / 0 g</span>
+        </div>
+        <div class="macro-bar-row bar-carb">
+          <span class="bar-label" style="color:#fbbf24;">Carbs</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-carb"></div></div>
+          <span id="bar-carb-txt">0 / 0 g</span>
+        </div>
+        <div class="macro-bar-row bar-fat">
+          <span class="bar-label" style="color:#60a5fa;">Fats</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-fat"></div></div>
+          <span id="bar-fat-txt">0 / 0 g</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meals-grid" id="meals-grid"></div>
+
+    <div class="meal-total-row" id="meal-totals"></div>
+
+  </section>
+
   <script>
-      
-    // --- Macros logic mirrored from Python backend ---
-    const activityMultiplier = {
-      sedentary: 1.2,
-      light: 1.375,
-      moderate: 1.55,
-      high: 1.725,
-      very_high: 1.9,
+    // ── MACRO CALCULATORS (mirror of Python backend) ─────────────────────
+
+    const ACT = {
+      sedentary: 1.2, light: 1.375, moderate: 1.55,
+      high: 1.725, very_high: 1.9,
     };
 
-    function calculateBmr({ sex, age, height_cm, weight_kg }) {
-      if (sex === "male") {
-        return 10 * weight_kg + 6.25 * height_cm - 5 * age + 5;
-      }
-      return 10 * weight_kg + 6.25 * height_cm - 5 * age - 161;
-    }
-
-    function calculateTdee(bmr, activity) {
-      const mult = activityMultiplier[activity] ?? 1.55;
-      return bmr * mult;
+    function bmr({ sex, age, height_cm, weight_kg }) {
+      return sex === "male"
+        ? 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
+        : 10 * weight_kg + 6.25 * height_cm - 5 * age - 161;
     }
 
     function goalCalories(tdee, goal) {
       if (goal === "build") {
-        let target = tdee * 1.10;
-        return Math.max(tdee + 200, Math.min(tdee + 350, target));
-      } else if (goal === "define") {
-        let target = tdee * 0.90;
-        return Math.min(tdee - 200, Math.max(tdee - 350, target));
+        const t = tdee * 1.10;
+        return Math.max(tdee + 200, Math.min(tdee + 350, t));
+      }
+      if (goal === "define") {
+        const t = tdee * 0.90;
+        return Math.min(tdee - 200, Math.max(tdee - 350, t));
       }
       return tdee;
     }
 
-    function macroSplit(goal) {
-      if (goal === "build") {
-        return { protein: 0.28, carbs: 0.47, fats: 0.25 };
-      } else if (goal === "define") {
-        return { protein: 0.32, carbs: 0.40, fats: 0.28 };
-      }
-      return { protein: 0.25, carbs: 0.45, fats: 0.30 };
+    function split(goal) {
+      if (goal === "build")  return { p: 0.28, c: 0.47, f: 0.25 };
+      if (goal === "define") return { p: 0.32, c: 0.40, f: 0.28 };
+      return { p: 0.25, c: 0.45, f: 0.30 };
     }
 
-    function calculateMacrosJS(params) {
-      const bmr = calculateBmr(params);
-      const tdee = calculateTdee(bmr, params.activity);
-      const calories = goalCalories(tdee, params.goal);
-      const split = macroSplit(params.goal);
-
-      const proteinCals = calories * split.protein;
-      const carbCals = calories * split.carbs;
-      const fatCals = calories * split.fats;
-
-      const protein_g = proteinCals / 4;
-      const carbs_g = carbCals / 4;
-      const fats_g = fatCals / 9;
-      const protein_g_per_kg = protein_g / params.weight_kg;
-
+    function calcMacros(params) {
+      const b    = bmr(params);
+      const tdee = b * (ACT[params.activity] ?? 1.55);
+      const cal  = goalCalories(tdee, params.goal);
+      const s    = split(params.goal);
       return {
-        bmr: Math.round(bmr),
-        tdee: Math.round(tdee),
-        calories: Math.round(calories),
-        protein_g: +(protein_g.toFixed(1)),
-        carbs_g: +(carbs_g.toFixed(1)),
-        fats_g: +(fats_g.toFixed(1)),
-        protein_g_per_kg: +(protein_g_per_kg.toFixed(2)),
-        split,
+        calories: Math.round(cal),
+        protein:  +(cal * s.p / 4).toFixed(1),
+        carbs:    +(cal * s.c / 4).toFixed(1),
+        fats:     +(cal * s.f / 9).toFixed(1),
+        split: s,
       };
     }
 
-    // --- Hook form to UI ---
+    // ── MEAL DATABASE ─────────────────────────────────────────────────────
+    // Each meal: { time, badge, name, desc, pro, carb, fat }
+    // We have one set per goal; meals are scaled later to hit targets.
 
-    const form = document.getElementById("macro-form");
-    const resultBox = document.getElementById("macro-result");
-    const macroText = document.getElementById("macro-text");
+    const MEALS = {
+      healthy: [
+        {
+          time: "Breakfast", badge: "badge-breakfast",
+          name: "Greek Yogurt Bowl",
+          desc: "Full-fat Greek yogurt, mixed berries, walnuts, honey drizzle.",
+          pro: 22, carb: 38, fat: 12,
+        },
+        {
+          time: "Lunch", badge: "badge-lunch",
+          name: "Grilled Chicken & Quinoa",
+          desc: "Grilled chicken breast, quinoa, roasted bell peppers, olive oil.",
+          pro: 45, carb: 52, fat: 14,
+        },
+        {
+          time: "Snack", badge: "badge-snack",
+          name: "Apple & Almond Butter",
+          desc: "1 medium apple with 2 tbsp natural almond butter.",
+          pro: 5,  carb: 28, fat: 10,
+        },
+        {
+          time: "Dinner", badge: "badge-dinner",
+          name: "Salmon & Sweet Potato",
+          desc: "Baked salmon fillet, mashed sweet potato, steamed broccoli.",
+          pro: 42, carb: 48, fat: 18,
+        },
+      ],
+      build: [
+        {
+          time: "Breakfast", badge: "badge-breakfast",
+          name: "Oats Power Bowl",
+          desc: "Rolled oats, banana, whey protein, peanut butter, whole milk.",
+          pro: 38, carb: 75, fat: 16,
+        },
+        {
+          time: "Lunch", badge: "badge-lunch",
+          name: "Turkey Rice Bowl",
+          desc: "Ground turkey, white rice, avocado, black beans, salsa.",
+          pro: 52, carb: 80, fat: 18,
+        },
+        {
+          time: "Snack", badge: "badge-snack",
+          name: "Cottage Cheese & Rice Cakes",
+          desc: "Low-fat cottage cheese, 3 rice cakes, cucumber slices.",
+          pro: 24, carb: 32, fat: 5,
+        },
+        {
+          time: "Dinner", badge: "badge-dinner",
+          name: "Beef & Pasta",
+          desc: "Lean ground beef, whole-wheat pasta, tomato sauce, parmesan.",
+          pro: 55, carb: 90, fat: 20,
+        },
+      ],
+      define: [
+        {
+          time: "Breakfast", badge: "badge-breakfast",
+          name: "Egg White Omelette",
+          desc: "5 egg whites, spinach, mushrooms, feta cheese, 1 slice rye toast.",
+          pro: 32, carb: 22, fat: 7,
+        },
+        {
+          time: "Lunch", badge: "badge-lunch",
+          name: "Tuna & Lentil Salad",
+          desc: "Canned tuna, green lentils, cherry tomatoes, lemon-olive oil dressing.",
+          pro: 48, carb: 35, fat: 10,
+        },
+        {
+          time: "Snack", badge: "badge-snack",
+          name: "Protein Shake & Almonds",
+          desc: "Whey protein shake (water) + 15 g almonds.",
+          pro: 26, carb: 8,  fat: 8,
+        },
+        {
+          time: "Dinner", badge: "badge-dinner",
+          name: "Chicken & Cauliflower Rice",
+          desc: "Grilled chicken thighs, cauliflower rice, green beans, tahini.",
+          pro: 46, carb: 18, fat: 14,
+        },
+      ],
+    };
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const sex = document.getElementById("sex").value;
-      const age = parseInt(document.getElementById("age").value, 10);
-      const height = parseFloat(document.getElementById("height").value);
-      const weight = parseFloat(document.getElementById("weight").value);
-      const activity = document.getElementById("activity").value;
-      const goal = document.getElementById("goal").value;
+    // ── SCALE MEALS TO HIT TARGET MACROS ─────────────────────────────────
+    // Simple proportional scale: multiply each meal by a scalar so that
+    // sum(pro) ≈ target_protein, then re-derive carbs/fats with same scalar.
 
-      const macros = calculateMacrosJS({
-        sex,
-        age,
-        height_cm: height,
-        weight_kg: weight,
-        activity,
-        goal,
+    function scaleMeals(meals, targetPro, targetCarb, targetFat) {
+      const rawPro  = meals.reduce((s, m) => s + m.pro,  0);
+      const rawCarb = meals.reduce((s, m) => s + m.carb, 0);
+      const rawFat  = meals.reduce((s, m) => s + m.fat,  0);
+
+      const scPro  = rawPro  > 0 ? targetPro  / rawPro  : 1;
+      const scCarb = rawCarb > 0 ? targetCarb / rawCarb : 1;
+      const scFat  = rawFat  > 0 ? targetFat  / rawFat  : 1;
+      // Use average scalar to keep meal ratios natural
+      const sc = (scPro + scCarb + scFat) / 3;
+
+      return meals.map(m => ({
+        ...m,
+        pro:  +(m.pro  * sc).toFixed(1),
+        carb: +(m.carb * sc).toFixed(1),
+        fat:  +(m.fat  * sc).toFixed(1),
+        kcal: Math.round(m.pro * sc * 4 + m.carb * sc * 4 + m.fat * sc * 9),
+      }));
+    }
+
+    // ── RENDER MEALS ──────────────────────────────────────────────────────
+
+    function renderMeals(scaled, targetPro, targetCarb, targetFat) {
+      const grid    = document.getElementById("meals-grid");
+      const totRow  = document.getElementById("meal-totals");
+      const section = document.getElementById("meal-section");
+
+      grid.innerHTML = "";
+
+      scaled.forEach(m => {
+        const card = document.createElement("div");
+        card.className = "meal-card";
+        card.innerHTML = `
+          <span class="meal-time-badge ${m.badge}">${m.time}</span>
+          <div class="meal-name">${m.name}</div>
+          <div class="meal-desc">${m.desc}</div>
+          <div class="meal-macros">
+            <span class="meal-macro-tag tag-pro">P ${m.pro}g</span>
+            <span class="meal-macro-tag tag-carb">C ${m.carb}g</span>
+            <span class="meal-macro-tag tag-fat">F ${m.fat}g</span>
+            <span class="meal-macro-tag tag-kcal">${m.kcal} kcal</span>
+          </div>`;
+        grid.appendChild(card);
       });
 
-      macroText.textContent =
-        `Calories: ${macros.calories} kcal • ` +
-        `Protein: ${macros.protein_g} g • ` +
-        `Carbs: ${macros.carbs_g} g • ` +
-        `Fats: ${macros.fats_g} g ` +
-        `(P ${Math.round(macros.split.protein * 100)}% / ` +
-        `C ${Math.round(macros.split.carbs * 100)}% / ` +
-        `F ${Math.round(macros.split.fats * 100)}%)`;
+      // Totals
+      const totPro  = +(scaled.reduce((s, m) => s + parseFloat(m.pro),  0)).toFixed(1);
+      const totCarb = +(scaled.reduce((s, m) => s + parseFloat(m.carb), 0)).toFixed(1);
+      const totFat  = +(scaled.reduce((s, m) => s + parseFloat(m.fat),  0)).toFixed(1);
+      const totKcal = scaled.reduce((s, m) => s + m.kcal, 0);
 
-      resultBox.style.display = "block";
-    });
-  </script>
+      function cls(got, target) {
+        const ratio = got / target;
+        if (ratio < 0.92) return "total-warn";
+        if (ratio > 1.08) return "total-over";
+        return "total-ok";
+      }
 
-</body>
-</html>
+      totRow.innerHTML = `
+        <span class="total-label">Daily Total</span>
+        <span class="${cls(totPro,  targetPro)}">P ${totPro}g / ${targetPro}g</span>
+        <span class="${cls(totCarb, targetCarb)}">C ${totCarb}g / ${targetCarb}g</span>
+        <span class="${cls(totFat,  targetFat)}">F ${totFat}g / ${targetFat}g</span>
+        <span style="color:var(--text-muted);">${totKcal} kcal</span>`;
+
+      // Progress bars
+      const pct = (v, t) => Math.min(100, Math.round(v / t * 100));
+      document.getElementById("bar-pro").style.width  =
