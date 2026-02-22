@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumFast</title>
+
+  <!-- iOS: que se vea como app a pantalla completa al añadir al home -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="QuantumFast" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.12);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border-soft: rgba(148, 163, 184, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .hero {
+      max-width: 960px;
+      width: 100%;
+      border-radius: 28px;
+      padding: 32px 24px 28px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-soft);
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.75),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        flex-direction: row;
+        padding: 40px 40px 32px;
+        gap: 32px;
+      }
+    }
+
+    .hero-left {
+      flex: 3;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .hero-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 44px);
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+
+    .highlight {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 34rem;
+      margin-bottom: 22px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 20px;
+      background: var(--accent);
+      color: #022c22;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.45);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.55);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 10px 18px;
+      border: 1px solid var(--border-soft);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .hero-right {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .hero-card {
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.08), rgba(15, 23, 42, 0.96));
+    }
+
+    .hero-card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .hero-card-main {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .hero-number {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .hero-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.18);
+      color: var(--accent);
+    }
+
+    .hero-mini {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <section class="hero-left">
+      <div class="hero-pill">
+        <span class="hero-pill-dot"></span>
+        NEXT-GEN FASTING & FUEL
+      </div>
+
+      <h1>
+        Welcome to <span class="highlight">QuantumFast</span>.
+        Let’s build your next generation of healthy.
+      </h1>
+
+      <p class="hero-sub">
+        Track your fasts, protein, and hydration in one focused space.
+        Designed for high performers who want science-backed clarity, not noise.
+      </p>
+
+      <div class="hero-cta-row">
+        <button class="btn-primary">
+          Start my first fast
+          <span>⟶</span>
+        </button>
+        <button class="btn-secondary">
+          Preview today’s plan
+        </button>
+        <span class="hero-meta">No accounts yet. Your data stays on this device in v1.</span>
+      </div>
+    </section>
+
+    <aside class="hero-right">
+      <div class="hero-card">
+        <div class="hero-card-title">Today’s Fast</div>
+        <div class="hero-card-main">
+          <div>
+            <div class="hero-number">16:00</div>
+            <div style="font-size:11px;color:var(--text-muted);">Goal • Intermittent</div>
+          </div>
+          <div class="hero-badge">Ready when you are</div>
+        </div>
+        <div class="hero-mini">
+          <span>Fasting window • configurable</span>
+          <span>Healthy • Build • Define</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-card-title">Macros snapshot</div>
+        <div class="hero-mini">
+          <span>Calories • Protein • Water</span>
+          <span>Coming next: live from your profile</span>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Aquí luego conectaremos con tu backend (Python → API/JS) para
+    // rellenar los datos de fast actual, macros, agua, etc.
+  </script>
+</body>
+</html>
