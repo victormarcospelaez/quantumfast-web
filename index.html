@@ -2,256 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>QuantumFast</title>
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="QuantumFast"/>
   <link rel="apple-touch-icon" href="icon-192.png"/>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     :root {
       --black: #000; --surface: #0a0a0a; --surface2: #111; --surface3: #1a1a1a;
       --border: rgba(255,255,255,0.07); --border-light: rgba(255,255,255,0.12);
-      --green: #00ff87; --green-dim: rgba(0,255,135,0.08); --green-mid: rgba(0,255,135,0.18);
-      --amber: #f59e0b; --blue: #3b82f6; --text: #fff; --text2: rgba(255,255,255,0.55);
+      --green: #00ff87; --amber: #f59e0b; --blue: #3b82f6; --text: #fff; --text2: rgba(255,255,255,0.55);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-    body::before { content: ''; position: fixed; top: -30vh; left: 50%; transform: translateX(-50%); width: 70vw; height: 60vh; background: radial-gradient(ellipse, rgba(0,255,135,0.07) 0%, transparent 70%); pointer-events: none; z-index: 0; }
-    .page { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 0 100px; }
-    .topnav { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 0; }
-    .logo { font-size: 15px; font-weight: 800; letter-spacing: -0.03em; }
+    body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow: hidden; }
+    
+    /* SPA VIEWS */
+    .view { display: none; height: 100vh; overflow-y: auto; padding: 60px 20px 100px; position: absolute; width: 100%; top: 0; }
+    .view.active { display: block; }
+    
+    .logo { position: fixed; top: 20px; left: 20px; font-size: 15px; font-weight: 800; z-index: 100; }
     .logo span { color: var(--green); }
-    .hero-statement { padding: 36px 20px 24px; }
-    .hero-h1 { font-size: 38px; font-weight: 900; line-height: 1.0; letter-spacing: -0.04em; margin-bottom: 16px; }
-    .hero-h1 em { font-style: normal; background: linear-gradient(135deg, #00ff87, #00c9ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .card { margin: 0 16px 16px; border-radius: 24px; background: var(--surface2); border: 1px solid var(--border); padding: 22px; position: relative; overflow: hidden; }
-    .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
-    .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text2); margin-bottom: 16px; }
+
+    .card { background: var(--surface2); border: 1px solid var(--border); padding: 22px; border-radius: 24px; margin-bottom: 16px; position: relative; }
+    .label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text2); letter-spacing: 0.1em; margin-bottom: 15px; }
     
     /* FASTING RING */
-    .ring-wrap { position: relative; width: 160px; height: 160px; margin: 0 auto 20px; }
-    .ring-svg { transform: rotate(-90deg); }
-    .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
-    .ring-fill { fill: none; stroke: url(#ringGrad); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 440; transition: stroke-dashoffset 1s linear; }
-    .ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-    .ring-time { font-size: 32px; font-weight: 800; color: var(--text); }
-    .fast-protocols { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
-    .proto-btn { padding: 6px 12px; border-radius: 10px; border: 1px solid var(--border-light); background: transparent; color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; }
-    .proto-btn.active { background: var(--green-mid); border-color: var(--green); color: var(--green); }
-    .btn-main { width: 100%; padding: 14px; border-radius: 14px; border: none; background: var(--green); color: #001a0d; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 30px rgba(0,255,135,0.2); }
-    
+    .ring-wrap { position: relative; width: 220px; height: 220px; margin: 20px auto; }
+    .ring-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 8; }
+    .ring-fill { fill: none; stroke: url(#grad); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 440; transition: stroke-dashoffset 1s linear; }
+    .ring-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+    .ring-time { font-size: 36px; font-weight: 900; letter-spacing: -1px; }
+
+    .btn-main { background: var(--green); border: none; border-radius: 16px; color: #000; font-weight: 800; padding: 16px; width: 100%; cursor: pointer; }
+    .proto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0; }
+    .proto-btn { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .proto-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,135,0.05); }
+
     /* WATER TRACKER */
-    .water-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-    .water-tile { background: rgba(59,130,246,0.08); padding: 16px; border-radius: 18px; text-align: center; border: 1px solid rgba(59,130,246,0.15); }
-    .water-val { font-size: 24px; font-weight: 800; color: #60a5fa; }
-    .water-btn-row { display: flex; justify-content: center; gap: 12px; margin-top: 15px; }
-    .water-add { width: 50px; height: 50px; border-radius: 999px; border: none; background: #3b82f6; color: white; font-size: 24px; font-weight: 600; cursor: pointer; }
-    
-    /* MACROS & MEALS */
-    .macro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .macro-tile { border-radius: 16px; padding: 14px; background: var(--surface3); border: 1px solid var(--border); }
-    .mt-pro { color: var(--green); } .mt-carb { color: var(--amber); } .mt-fat { color: var(--blue); }
-    .meal-card { background: var(--surface2); border: 1px solid var(--border); border-left: 4px solid var(--green); padding: 16px; border-radius: 18px; margin-bottom: 10px; }
-    
-    /* FORM */
-    .ff { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-    .ff label { font-size: 10px; color: var(--text2); text-transform: uppercase; }
-    .ff input, .ff select { padding: 10px; border-radius: 10px; border: 1px solid var(--border-light); background: var(--surface3); color: white; outline: none; }
-    
+    .water-progress { height: 120px; width: 120px; border-radius: 50%; border: 6px solid var(--blue); margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: var(--blue); }
+    .water-controls { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+    .water-btn { background: var(--blue); border: none; width: 60px; height: 60px; border-radius: 50%; color: white; font-size: 24px; font-weight: 900; }
+
+    /* FORM & MACROS */
+    .ff { margin-bottom: 12px; }
+    .ff label { font-size: 10px; color: var(--text2); display: block; margin-bottom: 5px; }
+    .ff input, .ff select { width: 100%; background: var(--surface3); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; }
+    .macro-tile { padding: 15px; border-radius: 18px; background: var(--surface3); border: 1px solid var(--border); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
     /* BOTTOM NAV */
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 12px 20px 30px; background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; backdrop-filter: blur(10px); }
-    .nav-item { opacity: 0.4; text-align: center; font-size: 10px; color: var(--text2); }
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(10,10,10,0.8); backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 15px 10px 35px; justify-content: space-around; z-index: 1000; }
+    .nav-item { text-align: center; color: var(--text2); opacity: 0.5; font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .nav-item.active { opacity: 1; color: var(--green); }
-    .nav-icon { font-size: 20px; margin-bottom: 2px; }
+    .nav-icon { font-size: 22px; margin-bottom: 4px; }
   </style>
 </head>
 <body>
-<div class="page">
-  <nav class="topnav"><div class="logo">Quantum<span>Fast</span></div></nav>
-  
-  <div class="hero-statement">
-    <h1 class="hero-h1">Welcome back,<br><em>Quantum User.</em></h1>
-  </div>
 
-  <!-- FAST CARD -->
-  <div class="card">
-    <div class="label">Fasting Timer</div>
-    <div class="ring-wrap">
-      <svg class="ring-svg" width="160" height="160">ircle class="ring-bg" cx="80" cy="80" r="70"/>ircle class="ring-fill" cx="80" cy="80" r="70" id="ring-fill"/></svg>
-      <div class="ring-center"><div class="ring-time" id="ring-time">00:00:00</div><div id="ring-label" style="font-size:11px;color:var(--text2)">Target: 18h</div></div>
-    </div>
-    <div class="fast-protocols" id="proto-list"></div>
-    <button class="btn-main" id="fast-btn" onclick="toggleFast()">Start Fast</button>
-  </div>
+  <div class="logo">Quantum<span>Fast</span></div>
 
-  <!-- WATER TRACKER -->
-  <div class="card" id="water-section" style="display:none">
-    <div class="label">Hydration OS</div>
-    <div class="water-grid">
-      <div class="water-tile"><div class="label" style="margin-bottom:4px">Target</div><div class="water-val" id="water-target">0.0</div><div style="font-size:10px">Liters</div></div>
-      <div class="water-tile"><div class="label" style="margin-bottom:4px">Current</div><div class="water-val" id="water-current">0.0</div><div style="font-size:10px">Liters</div></div>
-    </div>
-    <div class="water-btn-row">
-      <button class="water-add" onclick="addWater(0.25)">+</button>
-      <div style="align-self:center; font-size:12px; color:var(--text2)"><span id="water-percent">0</span>% of daily goal</div>
+  <!-- VIEW 1: FAST -->
+  <div id="view-fast" class="view active">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px;">Protocol <em>OS</em></h2>
+    <div class="card">
+      <div class="label">Current Fast</div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 160 160">ircle class="ring-bg" cx="80" cy="80" r="70"/>ircle class="ring-fill" cx="80" cy="80" r="70" id="ring-fill"/></svg>
+        <div class="ring-content"><div class="ring-time" id="ring-time">00:00:00</div><div id="ring-label" style="font-size:11px;color:var(--text2)">Target: 18h</div></div>
+      </div>
+      <div class="proto-grid" id="proto-list"></div>
+      <button class="btn-main" id="fast-btn" onclick="toggleFast()">Start Fasting</button>
     </div>
   </div>
 
-  <!-- SETUP -->
-  <div class="card">
-    <div class="label">Profile & Goals</div>
-    <div style="display:flex; gap:10px; margin-bottom:10px;">
-      <div class="ff"><label>Weight (kg)</label><input type="number" id="weight" value="80"></div>
-      <div class="ff"><label>Goal</label><select id="goal"><option value="healthy">Healthy</option><option value="build">Build</option><option value="define">Define</option></select></div>
+  <!-- VIEW 2: FUEL -->
+  <div id="view-fuel" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px;">Nutri<span>Fuel</span></h2>
+    <div class="card">
+      <div class="label">Profile Configuration</div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="ff"><label>Weight (kg)</label><input type="number" id="weight" value="80" onchange="calculate()"></div>
+        <div class="ff"><label>Goal</label><select id="goal" onchange="calculate()"><option value="healthy">Healthy</option><option value="build">Build</option><option value="define">Define</option></select></div>
+      </div>
+      <div class="ff"><label>Activity</label><select id="activity" onchange="calculate()"><option value="sedentary">Sedentary</option><option value="moderate" selected>Moderate</option><option value="high">High</option></select></div>
     </div>
-    <div style="display:flex; gap:10px; margin-bottom:15px;">
-      <div class="ff"><label>Age</label><input type="number" id="age" value="35"></div>
-      <div class="ff"><label>Activity</label><select id="activity"><option value="sedentary">Sedentary</option><option value="moderate" selected>Moderate</option><option value="high">High</option></select></div>
-    </div>
-    <button class="btn-main" style="background:linear-gradient(135deg,#00ff87,#00c9ff)" onclick="calculateAll()">Update My Stats</button>
-  </div>
-
-  <!-- MACRO TILES -->
-  <div class="card" id="macro-results" style="display:none">
-    <div class="label">Daily Macro Targets</div>
-    <div class="macro-grid">
-      <div class="macro-tile mt-pro"><div class="label" style="color:var(--green)">Protein</div><div style="font-size:20px;font-weight:800"><span id="r-pro">0</span>g</div></div>
-      <div class="macro-tile mt-carb"><div class="label" style="color:var(--amber)">Carbs</div><div style="font-size:20px;font-weight:800"><span id="r-carb">0</span>g</div></div>
-      <div class="macro-tile mt-fat"><div class="label" style="color:var(--blue)">Fats</div><div style="font-size:20px;font-weight:800"><span id="r-fat">0</span>g</div></div>
-      <div class="macro-tile"><div class="label">Calories</div><div style="font-size:20px;font-weight:800"><span id="r-cal">0</span></div></div>
+    <div id="macro-results">
+      <div class="macro-tile"><span style="color:var(--green)">Protein</span><strong id="r-pro">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--amber)">Carbs</span><strong id="r-carb">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--blue)">Fats</span><strong id="r-fat">0g</strong></div>
+      <div class="macro-tile"><span>Daily Calories</span><strong id="r-cal">0</strong></div>
     </div>
   </div>
-</div>
 
-<nav class="bottom-nav">
-  <div class="nav-item active"><div class="nav-icon">⚡</div>Fast</div>
-  <div class="nav-item"><div class="nav-icon">🥗</div>Fuel</div>
-  <div class="nav-item"><div class="nav-icon">💧</div>Hydrate</div>
-</nav>
+  <!-- VIEW 3: HYDRATE -->
+  <div id="view-hydrate" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px;">Hydration <em>OS</em></h2>
+    <div class="card" style="text-align: center;">
+      <div class="label">Daily Water Goal</div>
+      <div class="water-progress" id="water-pct">0%</div>
+      <div style="font-size: 14px; color: var(--text2); margin-top: 10px;">
+        <span id="water-current" style="color:var(--blue); font-weight:800">0.0</span> / <span id="water-target">2.5</span> Liters
+      </div>
+      <div class="water-controls">
+        <button class="water-btn" onclick="addWater(-0.25)" style="background:var(--surface3); color:var(--text2)">-</button>
+        <button class="water-btn" onclick="addWater(0.25)">+</button>
+      </div>
+    </div>
+  </div>
 
-<svg style="height:0; width:0; position:absolute;"><defs><linearGradient id="ringGrad"><stop offset="0%" stop-color="#00ff87"/><stop offset="100%" stop-color="#00c9ff"/></linearGradient></defs></svg>
+  <!-- NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="showView('fast', this)"><div class="nav-icon">⚡</div>Fast</div>
+    <div class="nav-item" onclick="showView('fuel', this)"><div class="nav-icon">🥗</div>Fuel</div>
+    <div class="nav-item" onclick="showView('hydrate', this)"><div class="nav-icon">💧</div>Hydrate</div>
+  </nav>
 
-<script>
-  let state = {
-    weight: 80, age: 35, goal: 'healthy', activity: 'moderate',
-    fastStart: null, fastDuration: 18,
-    waterDrank: 0, waterTarget: 2.5
-  };
+  <svg style="height:0; width:0;"><defs><linearGradient id="grad"><stop offset="0%" stop-color="#00ff87"/><stop offset="100%" stop-color="#00c9ff"/></linearGradient></defs></svg>
 
-  const protocols = [14,16,18,20,24,36,48,72];
-  const CIRC = 440;
+  <script>
+    let state = { weight:80, age:35, goal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, waterTarget:2.6 };
+    const protocols = [14,16,18,20,24,36,48,72];
 
-  // INITIALIZE
-  window.onload = () => {
-    const saved = localStorage.getItem('quantumState');
-    if (saved) {
-      state = JSON.parse(saved);
+    window.onload = () => {
+      const saved = localStorage.getItem('quantumState');
+      if (saved) state = JSON.parse(saved);
       document.getElementById('weight').value = state.weight;
-      document.getElementById('age').value = state.age;
       document.getElementById('goal').value = state.goal;
       document.getElementById('activity').value = state.activity;
-    }
-    renderProtos();
-    if (state.fastStart) startTimer();
-    updateWaterUI();
-    calculateAll(false); // Silent calc to restore UI
-  };
-
-  function save() { localStorage.setItem('quantumState', JSON.stringify(state)); }
-
-  function renderProtos() {
-    const div = document.getElementById('proto-list');
-    div.innerHTML = protocols.map(h => `<button class="proto-btn ${state.fastDuration==h?'active':''}" onclick="setProto(${h})">${h}h</button>`).join('');
-  }
-
-  function setProto(h) {
-    state.fastDuration = h;
-    document.getElementById('ring-label').textContent = `Target: ${h}h`;
-    renderProtos();
-    save();
-  }
-
-  function toggleFast() {
-    if (state.fastStart) {
-      state.fastStart = null;
-      document.getElementById('fast-btn').textContent = "Start Fast";
-      document.getElementById('ring-fill').style.strokeDashoffset = CIRC;
-    } else {
-      state.fastStart = Date.now();
-      document.getElementById('fast-btn').textContent = "End Fast";
-      startTimer();
-    }
-    save();
-  }
-
-  function startTimer() {
-    const tick = () => {
-      if (!state.fastStart) return;
-      const elapsed = (Date.now() - state.fastStart) / 1000;
-      const total = state.fastDuration * 3600;
-      const ratio = Math.min(elapsed / total, 1);
-      
-      const rem = Math.max(0, total - elapsed);
-      const h = Math.floor(rem / 3600);
-      const m = Math.floor((rem % 3600) / 60);
-      const s = Math.floor(rem % 60);
-      
-      document.getElementById('ring-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      document.getElementById('ring-fill').style.strokeDashoffset = CIRC * (1 - ratio);
-      requestAnimationFrame(tick);
+      renderProtos();
+      if (state.fastStart) startTimer();
+      calculate();
     };
-    tick();
-  }
 
-  function calculateAll(showResults = true) {
-    state.weight = parseFloat(document.getElementById('weight').value);
-    state.age = parseInt(document.getElementById('age').value);
-    state.goal = document.getElementById('goal').value;
-    state.activity = document.getElementById('activity').value;
-
-    // Macro logic
-    const bmr = 10 * state.weight + 6.25 * 178 - 5 * state.age + 5;
-    const mults = { sedentary: 1.2, moderate: 1.55, high: 1.725 };
-    let cal = bmr * mults[state.activity];
-    if (state.goal === 'build') cal += 300;
-    if (state.goal === 'define') cal -= 300;
-
-    const p_g = (cal * (state.goal=='healthy'?0.25:0.32)) / 4;
-    
-    document.getElementById('r-cal').textContent = Math.round(cal);
-    document.getElementById('r-pro').textContent = Math.round(p_g);
-    document.getElementById('r-carb').textContent = Math.round((cal * 0.45) / 4);
-    document.getElementById('r-fat').textContent = Math.round((cal * 0.25) / 9);
-    
-    // Water logic from Python script
-    let waterTarget = state.weight * 0.033; // 33ml/kg
-    if (state.activity === 'high') waterTarget += 0.7;
-    if (state.goal !== 'healthy') waterTarget += 0.3; // High protein bump
-    state.waterTarget = waterTarget;
-
-    if (showResults) {
-      document.getElementById('macro-results').style.display = 'block';
-      document.getElementById('water-section').style.display = 'block';
+    function showView(view, el) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + view).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
     }
-    updateWaterUI();
-    save();
-  }
 
-  function addWater(amount) {
-    state.waterDrank += amount;
-    updateWaterUI();
-    save();
-  }
+    function save() { localStorage.setItem('quantumState', JSON.stringify(state)); }
 
-  function updateWaterUI() {
-    document.getElementById('water-target').textContent = state.waterTarget.toFixed(1);
-    document.getElementById('water-current').textContent = state.waterDrank.toFixed(2);
-    const pct = Math.min(100, Math.round((state.waterDrank / state.waterTarget) * 100));
-    document.getElementById('water-percent').textContent = pct;
-  }
-</script>
+    function renderProtos() {
+      const div = document.getElementById('proto-list');
+      div.innerHTML = protocols.map(h => `<button class="proto-btn ${state.fastDuration==h?'active':''}" onclick="setProto(${h})">${h}h</button>`).join('');
+    }
+
+    function setProto(h) { state.fastDuration = h; document.getElementById('ring-label').textContent = `Target: ${h}h`; renderProtos(); save(); }
+
+    function toggleFast() {
+      if (state.fastStart) { state.fastStart = null; document.getElementById('fast-btn').textContent = "Start Fasting"; } 
+      else { state.fastStart = Date.now(); document.getElementById('fast-btn').textContent = "End Fasting"; startTimer(); }
+      save();
+    }
+
+    function startTimer() {
+      const tick = () => {
+        if (!state.fastStart) return;
+        const elapsed = (Date.now() - state.fastStart) / 1000;
+        const total = state.fastDuration * 3600;
+        const ratio = Math.min(elapsed / total, 1);
+        const rem = Math.max(0, total - elapsed);
+        const h = Math.floor(rem / 3600);
+        const m = Math.floor((rem % 3600) / 60);
+        const s = Math.floor(rem % 60);
+        document.getElementById('ring-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        document.getElementById('ring-fill').style.strokeDashoffset = 440 * (1 - ratio);
+        requestAnimationFrame(tick);
+      }; tick();
+    }
+
+    function calculate() {
+      state.weight = parseFloat(document.getElementById('weight').value);
+      state.goal = document.getElementById('goal').value;
+      state.activity = document.getElementById('activity').value;
+      const bmr = 10 * state.weight + 6.25 * 178 - 5 * 35 + 5;
+      const mults = { sedentary: 1.2, moderate: 1.55, high: 1.725 };
+      let cal = bmr * mults[state.activity];
+      if (state.goal === 'build') cal += 300; if (state.goal === 'define') cal -= 300;
+      document.getElementById('r-cal').textContent = Math.round(cal);
+      document.getElementById('r-pro').textContent = Math.round((cal * 0.3) / 4) + 'g';
+      document.getElementById('r-carb').textContent = Math.round((cal * 0.45) / 4) + 'g';
+      document.getElementById('r-fat').textContent = Math.round((cal * 0.25) / 9) + 'g';
+      state.waterTarget = state.weight * 0.033;
+      updateWaterUI(); save();
+    }
+
+    function addWater(n) { state.waterDrank = Math.max(0, state.waterDrank + n); updateWaterUI(); save(); }
+    function updateWaterUI() {
+      document.getElementById('water-target').textContent = state.waterTarget.toFixed(1);
+      document.getElementById('water-current').textContent = state.waterDrank.toFixed(2);
+      document.getElementById('water-pct').textContent = Math.round((state.waterDrank / state.waterTarget) * 100) + '%';
+    }
+  </script>
 </body>
 </html>
