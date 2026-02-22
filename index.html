@@ -260,11 +260,185 @@
         </div>
       </div>
     </aside>
+      <!-- FORM: quick macro setup -->
+    <section style="margin-top:24px;width:100%;">
+      <div style="
+        max-width:960px;
+        margin:0 auto;
+        padding:16px 18px 18px;
+        border-radius:18px;
+        border:1px solid rgba(148,163,184,0.35);
+        background:rgba(15,23,42,0.9);
+        color:#e5e7eb;
+        font-size:13px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#9ca3af;margin-bottom:8px;">
+          Quick setup
+        </div>
+        <form id="macro-form" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+          <div>
+            <label>Sex</label><br/>
+            <select id="sex" style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div>
+            <label>Age</label><br/>
+            <input id="age" type="number" value="35" min="16" max="90"
+              style="width:70px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
+          </div>
+          <div>
+            <label>Height (cm)</label><br/>
+            <input id="height" type="number" value="178"
+              style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
+          </div>
+          <div>
+            <label>Weight (kg)</label><br/>
+            <input id="weight" type="number" value="78"
+              style="width:80px;padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;"/>
+          </div>
+          <div>
+            <label>Activity</label><br/>
+            <select id="activity"
+              style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
+              <option value="sedentary">Sedentary</option>
+              <option value="light">Light</option>
+              <option value="moderate" selected>Moderate</option>
+              <option value="high">High</option>
+              <option value="very_high">Very High</option>
+            </select>
+          </div>
+          <div>
+            <label>Goal</label><br/>
+            <select id="goal"
+              style="padding:6px 8px;border-radius:8px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;">
+              <option value="healthy">Healthy</option>
+              <option value="build">Build</option>
+              <option value="define">Define</option>
+            </select>
+          </div>
+          <div>
+            <button type="submit" class="btn-primary">Preview today’s plan</button>
+          </div>
+        </form>
+
+        <div id="macro-result" style="margin-top:10px;display:none;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#9ca3af;margin-bottom:4px;">
+            Today’s targets
+          </div>
+          <div id="macro-text" style="font-size:13px;color:#e5e7eb;"></div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script>
-    // Aquí luego conectaremos con tu backend (Python → API/JS) para
-    // rellenar los datos de fast actual, macros, agua, etc.
+      
+    // --- Macros logic mirrored from Python backend ---
+    const activityMultiplier = {
+      sedentary: 1.2,
+      light: 1.375,
+      moderate: 1.55,
+      high: 1.725,
+      very_high: 1.9,
+    };
+
+    function calculateBmr({ sex, age, height_cm, weight_kg }) {
+      if (sex === "male") {
+        return 10 * weight_kg + 6.25 * height_cm - 5 * age + 5;
+      }
+      return 10 * weight_kg + 6.25 * height_cm - 5 * age - 161;
+    }
+
+    function calculateTdee(bmr, activity) {
+      const mult = activityMultiplier[activity] ?? 1.55;
+      return bmr * mult;
+    }
+
+    function goalCalories(tdee, goal) {
+      if (goal === "build") {
+        let target = tdee * 1.10;
+        return Math.max(tdee + 200, Math.min(tdee + 350, target));
+      } else if (goal === "define") {
+        let target = tdee * 0.90;
+        return Math.min(tdee - 200, Math.max(tdee - 350, target));
+      }
+      return tdee;
+    }
+
+    function macroSplit(goal) {
+      if (goal === "build") {
+        return { protein: 0.28, carbs: 0.47, fats: 0.25 };
+      } else if (goal === "define") {
+        return { protein: 0.32, carbs: 0.40, fats: 0.28 };
+      }
+      return { protein: 0.25, carbs: 0.45, fats: 0.30 };
+    }
+
+    function calculateMacrosJS(params) {
+      const bmr = calculateBmr(params);
+      const tdee = calculateTdee(bmr, params.activity);
+      const calories = goalCalories(tdee, params.goal);
+      const split = macroSplit(params.goal);
+
+      const proteinCals = calories * split.protein;
+      const carbCals = calories * split.carbs;
+      const fatCals = calories * split.fats;
+
+      const protein_g = proteinCals / 4;
+      const carbs_g = carbCals / 4;
+      const fats_g = fatCals / 9;
+      const protein_g_per_kg = protein_g / params.weight_kg;
+
+      return {
+        bmr: Math.round(bmr),
+        tdee: Math.round(tdee),
+        calories: Math.round(calories),
+        protein_g: +(protein_g.toFixed(1)),
+        carbs_g: +(carbs_g.toFixed(1)),
+        fats_g: +(fats_g.toFixed(1)),
+        protein_g_per_kg: +(protein_g_per_kg.toFixed(2)),
+        split,
+      };
+    }
+
+    // --- Hook form to UI ---
+
+    const form = document.getElementById("macro-form");
+    const resultBox = document.getElementById("macro-result");
+    const macroText = document.getElementById("macro-text");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const sex = document.getElementById("sex").value;
+      const age = parseInt(document.getElementById("age").value, 10);
+      const height = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const activity = document.getElementById("activity").value;
+      const goal = document.getElementById("goal").value;
+
+      const macros = calculateMacrosJS({
+        sex,
+        age,
+        height_cm: height,
+        weight_kg: weight,
+        activity,
+        goal,
+      });
+
+      macroText.textContent =
+        `Calories: ${macros.calories} kcal • ` +
+        `Protein: ${macros.protein_g} g • ` +
+        `Carbs: ${macros.carbs_g} g • ` +
+        `Fats: ${macros.fats_g} g ` +
+        `(P ${Math.round(macros.split.protein * 100)}% / ` +
+        `C ${Math.round(macros.split.carbs * 100)}% / ` +
+        `F ${Math.round(macros.split.fats * 100)}%)`;
+
+      resultBox.style.display = "block";
+    });
   </script>
+
 </body>
 </html>
