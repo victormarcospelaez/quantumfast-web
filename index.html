@@ -18,7 +18,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow: hidden; }
 
-    /* VISTAS */
     .view { display: none; height: 100vh; overflow-y: auto; padding: 70px 20px 140px; position: absolute; width: 100%; top: 0; }
     .view.active { display: block; }
 
@@ -27,31 +26,28 @@
     .card { background: var(--surface2); border: 1px solid var(--border); padding: 24px; border-radius: 28px; margin-bottom: 16px; position: relative; }
     .label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text2); letter-spacing: 0.15em; margin-bottom: 15px; }
 
-    /* RING WRAPPER */
     .ring-wrap { position: relative; width: 220px; height: 220px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
     .ring-content { position: absolute; text-align: center; width: 100%; z-index: 5; }
     .ring-time { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; line-height: 1; }
     .btn-main { background: var(--green); border: none; border-radius: 18px; color: #000; font-weight: 900; padding: 18px; width: 100%; cursor: pointer; font-size: 15px; margin-top: 10px; transition: 0.2s; }
     .btn-main:active { opacity: 0.8; transform: scale(0.98); }
     .btn-stop { background: #ff3b30; color: white; }
+    
     .proto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 25px 0; }
     .proto-btn { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 12px 5px; border-radius: 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
     .proto-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,135,0.1); }
 
-    /* FORM & TILES */
     .ff { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
     .ff label { font-size: 10px; color: var(--text2); font-weight: 700; text-transform: uppercase; }
     .ff input, .ff select { width: 100%; background: var(--surface3); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: white; font-size: 15px; outline: none; -webkit-appearance: none; }
     .macro-tile { padding: 18px; border-radius: 22px; background: var(--surface3); border: 1px solid var(--border); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .recipe-card { background: var(--surface3); border: 1px solid var(--border); border-radius: 22px; padding: 20px; margin-bottom: 15px; }
-    .recipe-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .recipe-tag { font-size: 9px; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 10px; color: var(--text2); text-transform: uppercase; font-weight: 800; }
 
-    /* NAV */
     .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(5,5,5,0.95); backdrop-filter: blur(25px); border-top: 1px solid var(--border); padding: 15px 5px 40px; justify-content: space-around; z-index: 2000; }
-    .nav-item { text-align: center; color: var(--text2); opacity: 0.4; font-size: 9px; font-weight: 700; cursor: pointer; width: 20%; }
+    .nav-item { text-align: center; color: var(--text2); opacity: 0.4; font-size: 9px; font-weight: 700; cursor: pointer; width: 25%; }
     .nav-item.active { opacity: 1; color: var(--green); }
     .nav-icon { font-size: 22px; margin-bottom: 4px; display: block; }
+
+    textarea.prompt-area { width: 100%; background: #000; color: var(--green); border: 1px solid var(--border); border-radius: 14px; padding: 15px; font-family: monospace; font-size: 12px; margin-top: 10px; resize: none; }
   </style>
 </head>
 <body>
@@ -83,19 +79,29 @@
   <div id="view-fuel" class="view">
     <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Nutri<span>Fuel</span></h2>
     <div class="card">
-      <div class="label">Daily Targets</div>
-      <div id="macro-results">
-        <div class="macro-tile"><span style="color:var(--green)">Protein</span><strong id="r-pro">0g</strong></div>
-        <div class="macro-tile"><span style="color:var(--amber)">Carbs</span><strong id="r-carb">0g</strong></div>
-        <div class="macro-tile"><span style="color:var(--blue)">Fats</span><strong id="r-fat">0g</strong></div>
-        <div class="macro-tile"><span>Daily Calories</span><strong id="r-cal">0</strong></div>
+      <div class="label">Daily Inputs</div>
+      <div style="display:flex; gap:10px;">
+        <div class="ff" style="flex:1"><label id="w-label">Weight</label><input type="number" id="weight" value="80" oninput="calculate()"></div>
+        <div class="ff" style="flex:1"><label>Goal</label><select id="daily-goal" onchange="calculate()"><option value="healthy">Healthy</option><option value="build">Build</option><option value="define">Define</option></select></div>
       </div>
+      <div class="ff"><label>Activity Level</label><select id="activity" onchange="calculate()"><option value="sedentary">Sedentary</option><option value="moderate" selected>Moderate</option><option value="high">High</option></select></div>
     </div>
+
+    <div id="macro-results" style="margin-bottom:20px">
+      <div class="macro-tile"><span style="color:var(--green)">Protein</span><strong id="r-pro">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--amber)">Carbs</span><strong id="r-carb">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--blue)">Fats</span><strong id="r-fat">0g</strong></div>
+      <div class="macro-tile"><span>Daily Calories</span><strong id="r-cal">0</strong></div>
+    </div>
+
     <div class="card">
-      <div class="label">Quick Add Log</div>
-      <div class="ff"><label>Food Item</label><input type="text" id="food-name" placeholder="e.g. Algae Shake"></div>
-      <div class="ff"><label>Calories</label><input type="number" id="food-cal" placeholder="0"></div>
-      <button class="btn-main" onclick="logFood()">Log Fuel</button>
+      <div class="label">Recipe Proposal Questions</div>
+      <div class="ff"><label>Focus Meal</label><select id="q-focus"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option></select></div>
+      <div class="ff"><label>% Calories for Focus Meal</label><input type="number" id="q-pct" value="40" min="10" max="100"></div>
+      <div class="ff"><label>Morning Routine</label><select id="q-morning"><option value="time for breakfast">I have time for breakfast</option><option value="just coffee">Just coffee / fasting</option></select></div>
+      <div class="ff"><label>Time for Lunch?</label><select id="q-lunch-time"><option value="yes">Yes, I have time</option><option value="no">No, something quick</option></select></div>
+      <button class="btn-main" onclick="generatePrompt()">Generate Recipe Prompt</button>
+      <textarea id="prompt-output" class="prompt-area" style="display:none;" readonly></textarea>
     </div>
   </div>
 
@@ -115,48 +121,42 @@
     </div>
   </div>
 
-  <!-- VIEW 4: PROGRESS (WEIGHT) -->
-  <div id="view-weight" class="view">
-    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Progress <em>OS</em></h2>
+  <!-- VIEW 4: SETUP -->
+  <div id="view-setup" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">System <em>Setup</em></h2>
     <div class="card">
-      <div class="label">Weight Tracking</div>
-      <div class="ff"><label id="w-label-log">Current Weight (kg)</label><input type="number" id="weight-log" step="0.1"></div>
-      <button class="btn-main" onclick="logWeight()">Log Weight</button>
-    </div>
-    <div class="card">
-      <div class="label">Profile & Goals</div>
-      <div class="ff"><label>Units</label><select id="units" onchange="updateUnitUI()"><option value="metric">Metric (kg/cm)</option><option value="imperial">Imperial (lb/in)</option></select></div>
-      <div class="ff"><label>Goal</label><select id="goal" onchange="calculate()"><option value="healthy">Healthy</option><option value="build">Build</option><option value="define">Define</option></select></div>
-      <div class="ff"><label>Activity</label><select id="activity" onchange="calculate()"><option value="sedentary">Sedentary</option><option value="moderate" selected>Moderate</option><option value="high">High</option></select></div>
+      <div class="label">Measurement System</div>
+      <select id="units" onchange="updateUnitUI()" style="margin-bottom:20px; width:100%; background:var(--surface3); color:white; padding:14px; border-radius:14px; border:1px solid var(--border);">
+        <option value="metric">Metric (kg / cm)</option>
+        <option value="imperial">Imperial (lb / ft-in)</option>
+      </select>
+      
+      <div class="label">Biometrics & AI</div>
       <div class="ff"><label>Sex</label><select id="sex" onchange="calculate()"><option value="male">Male</option><option value="female">Female</option></select></div>
       <div class="ff"><label>Age</label><input type="number" id="age" value="35" oninput="calculate()"></div>
+      
       <div class="ff" id="h-metric"><label>Height (cm)</label><input type="number" id="height-cm" value="178" oninput="calculate()"></div>
-      <div id="h-imperial" style="display:none; gap:10px; margin-bottom:15px;"><div class="ff" style="flex:1"><label>Ft</label><input type="number" id="height-ft" value="5" oninput="calculate()"></div><div class="ff" style="flex:1"><label>In</label><input type="number" id="height-in" value="10" oninput="calculate()"></div></div>
-    </div>
-  </div>
+      <div id="h-imperial" style="display:none; gap:10px; margin-bottom:15px;">
+        <div class="ff" style="flex:1"><label>Feet</label><input type="number" id="height-ft" value="5" oninput="calculate()"></div>
+        <div class="ff" style="flex:1"><label>Inches</label><input type="number" id="height-in" value="10" oninput="calculate()"></div>
+      </div>
 
-  <!-- VIEW 5: RECIPES -->
-  <div id="view-recipes" class="view">
-    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Quantum <em>Eats</em></h2>
-    <div id="recipe-list"></div>
+      <div class="ff"><label>Long Term Goal</label><select id="long-goal" onchange="calculate()"><option value="healthy">Maintain Healthy Weight</option><option value="build">Build Muscle / Bulk</option><option value="define">Fat Loss / Definition</option></select></div>
+      
+      <div class="ff"><label>AI Assistant</label><select id="ai-provider"><option value="GPT">ChatGPT (OpenAI)</option><option value="Grok">Grok (xAI)</option><option value="Copilot">Copilot (Microsoft)</option><option value="Gemini">Gemini (Google)</option><option value="Perplexity">Perplexity</option></select></div>
+    </div>
   </div>
 
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="showView('fast', this)"><span class="nav-icon">⚡</span>Fast</div>
     <div class="nav-item" onclick="showView('fuel', this)"><span class="nav-icon">🥗</span>Fuel</div>
     <div class="nav-item" onclick="showView('hydrate', this)"><span class="nav-icon">💧</span>Hydrate</div>
-    <div class="nav-item" onclick="showView('weight', this)"><span class="nav-icon">📈</span>Progress</div>
-    <div class="nav-item" onclick="showView('recipes', this)"><span class="nav-icon">📖</span>Recipes</div>
+    <div class="nav-item" onclick="showView('setup', this)"><span class="nav-icon">⚙️</span>Setup</div>
   </nav>
 
   <script>
-    let state = { units:'metric', weight:80, hCm:178, hFt:5, hIn:10, age:35, sex:'male', goal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, weightHistory:[], foodLog:[] };
+    let state = { units:'metric', weight:80, hCm:178, hFt:5, hIn:10, age:35, sex:'male', goal:'healthy', longGoal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, ai:'GPT' };
     const protocols = [14,16,18,20,24,36,48,72];
-    const recipes = [
-      { name: 'Sulforaphane Green Boost', cal: 120, pro: 5, carb: 15, fat: 2, tags: ['Detox', 'Marine'] },
-      { name: 'Algae Protein Shake', cal: 320, pro: 35, carb: 10, fat: 8, tags: ['Muscle', 'Bio'] },
-      { name: 'Quantum Keto Bowl', cal: 580, pro: 45, carb: 5, fat: 42, tags: ['Keto', 'Focus'] }
-    ];
     const CIRC = 439.82; 
     let timerInterval = null;
 
@@ -168,9 +168,10 @@
         document.getElementById('fast-btn').textContent = "Stop Fast";
         document.getElementById('fast-btn').classList.add('btn-stop');
         runTimerUI();
+      } else {
+        updateRingDisplay(0, state.fastDuration*3600);
       }
       calculate();
-      renderRecipes();
     };
 
     function showView(view, el) {
@@ -184,19 +185,21 @@
       document.getElementById('units').value = state.units;
       document.getElementById('sex').value = state.sex;
       document.getElementById('age').value = state.age;
-      document.getElementById('weight-log').value = state.weight;
+      document.getElementById('weight').value = state.weight;
       document.getElementById('height-cm').value = state.hCm;
       document.getElementById('height-ft').value = state.hFt;
       document.getElementById('height-in').value = state.hIn;
-      document.getElementById('goal').value = state.goal;
+      document.getElementById('long-goal').value = state.longGoal;
+      document.getElementById('daily-goal').value = state.goal;
       document.getElementById('activity').value = state.activity;
+      document.getElementById('ai-provider').value = state.ai || 'GPT';
       renderProtos();
       updateUnitUI();
     }
 
     function updateUnitUI() {
       state.units = document.getElementById('units').value;
-      document.getElementById('w-label-log').textContent = state.units === 'metric' ? 'Current Weight (kg)' : 'Current Weight (lbs)';
+      document.getElementById('w-label').textContent = state.units === 'metric' ? 'Weight (kg)' : 'Weight (lbs)';
       document.getElementById('h-metric').style.display = state.units === 'metric' ? 'flex' : 'none';
       document.getElementById('h-imperial').style.display = state.units === 'imperial' ? 'flex' : 'none';
       document.getElementById('water-unit').textContent = state.units === 'metric' ? 'L' : 'oz';
@@ -224,7 +227,7 @@
       const m = Math.floor((rem % 3600) / 60);
       const s = Math.floor(rem % 60);
       document.getElementById('ring-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      document.getElementById('ring-fill').setAttribute('stroke-dashoffset', CIRC * (1 - ratio));
+      document.getElementById('ring-fill').setAttribute('stroke-dashoffset', CIRC * ratio);
     }
 
     function toggleFast() {
@@ -251,14 +254,16 @@
     }
 
     function calculate() {
-      state.weight = parseFloat(document.getElementById('weight-log').value) || 80;
+      state.weight = parseFloat(document.getElementById('weight').value) || 80;
       state.hCm = parseFloat(document.getElementById('height-cm').value) || 178;
       state.hFt = parseInt(document.getElementById('height-ft').value) || 5;
       state.hIn = parseInt(document.getElementById('height-in').value) || 10;
       state.age = parseInt(document.getElementById('age').value) || 35;
       state.sex = document.getElementById('sex').value;
-      state.goal = document.getElementById('goal').value;
+      state.goal = document.getElementById('daily-goal').value;
+      state.longGoal = document.getElementById('long-goal').value;
       state.activity = document.getElementById('activity').value;
+      state.ai = document.getElementById('ai-provider').value;
 
       let wKg = state.units === 'metric' ? state.weight : state.weight / 2.20462;
       let hTotalCm = state.units === 'metric' ? state.hCm : (state.hFt * 30.48) + (state.hIn * 2.54);
@@ -266,15 +271,18 @@
       const bmr = (10 * wKg) + (6.25 * hTotalCm) - (5 * state.age) + (state.sex === 'male' ? 5 : -161);
       const mults = { sedentary: 1.2, moderate: 1.55, high: 1.725 };
       let cal = bmr * mults[state.activity];
-      if (state.goal === 'build') cal += 250; if (state.goal === 'define') cal -= 250;
       
+      if (state.goal === 'build') cal += 250;
+      if (state.goal === 'define') cal -= 250;
+
       document.getElementById('r-cal').textContent = Math.round(cal);
       document.getElementById('r-pro').textContent = Math.round((cal * 0.3) / 4) + 'g';
       document.getElementById('r-carb').textContent = Math.round((cal * 0.45) / 4) + 'g';
       document.getElementById('r-fat').textContent = Math.round((cal * 0.25) / 9) + 'g';
       
       state.waterTarget = wKg * 0.033;
-      updateWaterUI(); save();
+      updateWaterUI();
+      save();
     }
 
     function addWater(n) { 
@@ -290,28 +298,28 @@
       document.getElementById('water-pct').textContent = Math.round((state.waterDrank / targetVal) * 100);
     }
 
-    function logWeight() {
-      const w = parseFloat(document.getElementById('weight-log').value);
-      state.weightHistory.push({ date: new Date().toLocaleDateString(), weight: w });
-      calculate();
-      alert('Weight Logged!');
-    }
+    function generatePrompt() {
+      const focus = document.getElementById('q-focus').value;
+      const pct = document.getElementById('q-pct').value;
+      const morning = document.getElementById('q-morning').value;
+      const lunchTime = document.getElementById('q-lunch-time').value;
+      const totalCal = document.getElementById('r-cal').textContent;
+      const pro = document.getElementById('r-pro').textContent;
+      const carb = document.getElementById('r-carb').textContent;
+      const fat = document.getElementById('r-fat').textContent;
 
-    function renderRecipes() {
-      const div = document.getElementById('recipe-list');
-      div.innerHTML = recipes.map(r => `
-        <div class="recipe-card">
-          <div class="recipe-header">
-            <h3 style="font-weight:800">${r.name}</h3>
-            <div class="recipe-tag">${r.tags[0]}</div>
-          </div>
-          <div style="font-size:12px; color:var(--text2); display:flex; gap:15px">
-            <span>🔥 ${r.cal} cal</span>
-            <span>💪 ${r.pro}g Pro</span>
-            <span>🍞 ${r.carb}g Carb</span>
-          </div>
-        </div>
-      `).join('');
+      const prompt = `Act as a specialized nutritionist for ${state.ai}. I am following a fasting protocol of ${state.fastDuration}h. 
+      My daily targets are: ${totalCal} calories, ${pro} protein, ${carb} carbs, and ${fat} fats.
+      Please propose a recipe for my ${focus} which should account for ${pct}% of my daily calories.
+      Context: ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
+      Focus on high-nutrient density, biotech-friendly ingredients if possible (like sulforaphane-rich greens or marine proteins). 
+      Provide the recipe name, ingredients, and brief instructions.`;
+
+      const area = document.getElementById('prompt-output');
+      area.value = prompt;
+      area.style.display = 'block';
+      area.select();
+      alert('Prompt generated and copied to area below. Use it with your selected AI!');
     }
 
     function save() { localStorage.setItem('quantumState', JSON.stringify(state)); }
