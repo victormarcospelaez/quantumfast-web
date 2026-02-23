@@ -198,11 +198,31 @@
     }
 
     function updateUnitUI() {
-      state.units = document.getElementById('units').value;
-      document.getElementById('w-label').textContent = state.units === 'metric' ? 'Weight (kg)' : 'Weight (lbs)';
-      document.getElementById('h-metric').style.display = state.units === 'metric' ? 'flex' : 'none';
-      document.getElementById('h-imperial').style.display = state.units === 'imperial' ? 'flex' : 'none';
-      document.getElementById('water-unit').textContent = state.units === 'metric' ? 'L' : 'oz';
+      const prevUnits = state.units;
+      const newUnits = document.getElementById('units').value;
+      const weightInput = document.getElementById('weight');   
+      if (prevUnits && prevUnits !== newUnits) {
+        if (prevUnits === 'metric' && newUnits === 'imperial') {
+          // kg → lb
+          state.weight = state.weight * 2.20462;
+        } else if (prevUnits === 'imperial' && newUnits === 'metric') {
+          // lb → kg
+          state.weight = state.weight / 2.20462;
+        }
+        weightInput.value = Math.round(state.weight);
+      }
+    
+      state.units = newUnits;
+    
+      document.getElementById('w-label').textContent =
+        state.units === 'metric' ? 'Weight (kg)' : 'Weight (lbs)';
+      document.getElementById('h-metric').style.display =
+        state.units === 'metric' ? 'flex' : 'none';
+      document.getElementById('h-imperial').style.display =
+        state.units === 'imperial' ? 'flex' : 'none';
+      document.getElementById('water-unit').textContent =
+        state.units === 'metric' ? 'L' : 'oz';
+    
       calculate();
     }
 
@@ -327,6 +347,7 @@
   </script>
 </body>
 </html>
+
 
 
 
