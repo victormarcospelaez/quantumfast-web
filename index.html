@@ -1,1 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QuantumFast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; -webkit-tap-highlight-color: transparent; }
+        .quantum-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .active-tab { color: #00ff88; filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4)); }
+        .btn-active { border-color: #00ff88; color: #00ff88; box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.1); }
+        input::placeholder { color: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="max-w-md mx-auto min-h-screen flex flex-col antialiased">
+    <header class="p-6 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-md z-40">
+        <div>
+            <h1 class="text-2xl font-black tracking-tighter uppercase leading-none">
+                Quantum<span class="text-[#00ff88]">Fast</span>
+            </h1>
+            <div class="text-[8px] font-mono opacity-30 mt-1 tracking-[0.3em] uppercase">Marpelian Bio-OS v1.0.4</div>
+        </div>
+        <div class="h-2 w-2 rounded-full bg-[#00ff88] animate-pulse shadow-[0_0_10px_#00ff88]"></div>
+    </header>
 
+    <main class="flex-grow px-6 pb-32">
+        <section id="view-fast" class="view">
+            <div class="quantum-glass rounded-[40px] p-8 mt-4 text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00ff88]/20 to-transparent"></div>
+                <div class="text-[10px] font-mono opacity-40 uppercase tracking-[0.3em] mb-12">Autophagy Protocol Active</div>
+                <div class="relative flex justify-center items-center mb-12">
+                    <svg class="w-72 h-72 transform -rotate-90">
+                        <circle cx="144" cy="144" r="130" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" />
+                        <circle id="timer-ring" cx="144" cy="144" r="130" stroke="#00ff88" stroke-width="6" fill="none" stroke-dasharray="816" stroke-dashoffset="816" stroke-linecap="round" class="transition-all duration-1000" />
+                    </svg>
+                    <div class="absolute flex flex-col items-center">
+                        <span id="ring-time" class="text-6xl font-black tracking-tighter tabular-nums">18:00:00</span>
+                        <span id="timer-status" class="text-[10px] opacity-40 font-bold uppercase tracking-[0.2em] mt-2">Target Remaining</span>
+                    </div>
+                </div>
+                <div id="proto-list" class="grid grid-cols-3 gap-2 mb-10"></div>
+                <button id="fast-btn" class="w-full bg-[#00ff88] text-black font-black py-5 rounded-3xl text-xl hover:scale-[0.98] active:scale-95 transition-all shadow-[0_10px_30px_rgba(0,255,136,0.2)]">Initiate Fast</button>
+                <div class="mt-10 pt-10 border-t border-white/5 grid grid-cols-2 gap-4">
+                    <div class="text-left">
+                        <div class="text-[9px] opacity-30 uppercase font-black tracking-widest">Global Streak</div>
+                        <div id="fast-streak" class="text-xl font-black mt-1">3 Days</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[9px] opacity-30 uppercase font-black tracking-widest">Metabolic Avg</div>
+                        <div class="text-xl font-black mt-1 text-[#00ff88]">18.4h</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-fuel" class="view hidden">
+            <h2 class="text-4xl font-black tracking-tighter mb-8">Fuel <span class="text-[#00ff88]">Log</span></h2>
+            <div class="quantum-glass rounded-3xl p-6 mb-8">
+                <div class="space-y-4">
+                    <input type="text" id="food-name" placeholder="Nutrient/Food Name" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl focus:outline-none focus:border-[#00ff88]/50 transition-colors">
+                    <div class="flex gap-4">
+                        <input type="number" id="food-cals" placeholder="kcal" class="w-1/3 bg-white/5 border border-white/10 p-4 rounded-2xl focus:outline-none">
+                        <button id="add-fuel" class="flex-grow bg-white text-black font-black py-4 rounded-2xl hover:bg-[#00ff88] transition-colors">Log Fuel</button>
+                    </div>
+                </div>
+            </div>
+            <div id="fuel-list" class="space-y-4"></div>
+        </section>
+        <section id="view-hydrate" class="view hidden">
+            <h2 class="text-4xl font-black tracking-tighter mb-8">Hydration</h2>
+            <div class="quantum-glass rounded-[40px] p-12 text-center mb-8 relative">
+                <div class="text-7xl font-black mb-2 tabular-nums" id="water-total">0.0</div>
+                <div class="text-[10px] opacity-30 uppercase font-bold tracking-[0.3em] mb-12">Liters Consumed Today</div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="water-btn quantum-glass py-6 rounded-3xl text-sm font-black hover:bg-white/5 transition-all" data-val="0.25">0.25L</button>
+                    <button class="water-btn quantum-glass py-6 rounded-3xl text-sm font-black hover:bg-white/5 transition-all" data-val="0.50">0.50L</button>
+                    <button class="water-btn quantum-glass py-6 rounded-3xl text-sm font-black hover:bg-white/5 transition-all" data-val="1.0">1.0L</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-progress" class="view hidden">
+            <h2 class="text-4xl font-black tracking-tighter mb-8">Metrics</h2>
+            <div class="quantum-glass rounded-3xl p-8 mb-6">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <div class="text-[10px] opacity-30 uppercase font-black tracking-widest">Weight Status</div>
+                        <div class="text-4xl font-black mt-1" id="current-weight">78.5 <span class="text-sm font-normal opacity-40">kg</span></div>
+                    </div>
+                </div>
+                <div class="h-32 flex items-end gap-2 px-1">
+                    <div class="flex-grow bg-white/5 rounded-t-lg h-[40%]"></div>
+                    <div class="flex-grow bg-white/5 rounded-t-lg h-[55%]"></div>
+                    <div class="flex-grow bg-white/5 rounded-t-lg h-[45%]"></div>
+                    <div class="flex-grow bg-white/5 rounded-t-lg h-[60%]"></div>
+                    <div class="flex-grow bg-[#00ff88] rounded-t-lg h-[48%] shadow-[0_0_20px_#00ff8844]"></div>
+                </div>
+            </div>
+            <div id="weight-history" class="space-y-3"></div>
+        </section>
+
+        <section id="view-recipes" class="view hidden">
+            <h2 class="text-4xl font-black tracking-tighter mb-8">Bio-Hacks</h2>
+            <div class="space-y-4">
+                <div class="quantum-glass rounded-3xl p-5 flex gap-5 items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center text-3xl">🥦</div>
+                    <div>
+                        <h3 class="font-black text-lg">Sulforaphane Max</h3>
+                        <p class="text-xs opacity-40 font-medium">Broccoli Sprouts + Mustard Seed Oil</p>
+                    </div>
+                </div>
+                <div class="quantum-glass rounded-3xl p-5 flex gap-5 items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-3xl">🧬</div>
+                    <div>
+                        <h3 class="font-black text-lg">NMN Protocol</h3>
+                        <p class="text-xs opacity-40 font-medium">Sublingual Resveratrol + 250mg NMN</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto quantum-glass border-t-0 rounded-t-[32px] px-8 py-5 flex justify-between items-center z-50">
+        <button class="nav-btn active-tab flex flex-col items-center gap-1.5 transition-all" data-view="fast">
+            <span class="text-xl">⚡</span><span class="text-[9px] font-black uppercase tracking-[0.2em]">Fast</span>
+        </button>
+        <button class="nav-btn opacity-20 flex flex-col items-center gap-1.5 transition-all" data-view="fuel">
+            <span class="text-xl">🥗</span><span class="text-[9px] font-black uppercase tracking-[0.2em]">Fuel</span>
+        </button>
+        <button class="nav-btn opacity-20 flex flex-col items-center gap-1.5 transition-all" data-view="hydrate">
+            <span class="text-xl">💧</span><span class="text-[9px] font-black uppercase tracking-[0.2em]">Hydrate</span>
+        </button>
+        <button class="nav-btn opacity-20 flex flex-col items-center gap-1.5 transition-all" data-view="progress">
+            <span class="text-xl">📈</span><span class="text-[9px] font-black uppercase tracking-[0.2em]">Data</span>
+        </button>
+        <button class="nav-btn opacity-20 flex flex-col items-center gap-1.5 transition-all" data-view="recipes">
+            <span class="text-xl">📖</span><span class="text-[9px] font-black uppercase tracking-[0.2em]">Hacks</span>
+        </button>
+    </nav>
+    <script>
+        const state = {
+            view: 'fast',
+            fasting: false,
+            startTime: null,
+            goalHours: 18,
+            streak: 3,
+            water: 0.0,
+            foodLog: [
+                { name: 'Sulforaphane Salad', cals: 150, time: '13:45' },
+                { name: 'Marine Protein', cals: 320, time: '15:20' }
+            ],
+            weightLogs: [
+                { date: 'OCT 25', kg: 78.5 },
+                { date: 'OCT 24', kg: 78.7 },
+                { date: 'OCT 23', kg: 79.1 }
+            ]
+        };
+
+        const protocols = [
+            { name: '16:8', hrs: 16 },
+            { name: '18:6', hrs: 18 },
+            { name: 'OMAD', hrs: 23 }
+        ];
+
+        function renderProtos() {
+            const list = document.getElementById('proto-list');
+            list.innerHTML = '';
+            protocols.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'quantum-glass py-3 rounded-2xl text-[10px] font-black transition-all border ' + 
+                               (state.goalHours === p.hrs ? 'border-[#00ff88] text-[#00ff88] bg-[#00ff88]/5' : 'border-white/5 opacity-40');
+                btn.innerText = p.name;
+                btn.onclick = () => {
+                    state.goalHours = p.hrs;
+                    if (!state.fasting) document.getElementById('ring-time').innerText = p.hrs + ':00:00';
+                    renderProtos();
+                };
+                list.appendChild(btn);
+            });
+        }
+
+        function renderLists() {
+            const fList = document.getElementById('fuel-list');
+            fList.innerHTML = '';
+            state.foodLog.forEach(log => {
+                const div = document.createElement('div');
+                div.className = 'quantum-glass p-5 rounded-3xl flex justify-between items-center';
+                div.innerHTML = '<div><div class="font-black text-sm uppercase tracking-tight">' + log.name + '</div>' + 
+                                '<div class="text-[9px] opacity-30 mt-1">' + log.time + '</div></div>' + 
+                                '<div class="text-[#00ff88] font-black text-sm">' + log.cals + ' kcal</div>';
+                fList.appendChild(div);
+            });
+
+            const wList = document.getElementById('weight-history');
+            wList.innerHTML = '';
+            state.weightLogs.forEach(log => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center px-4 py-3 quantum-glass rounded-2xl border-white/5';
+                div.innerHTML = '<span class="text-[10px] opacity-40 font-black">' + log.date + '</span>' + 
+                                '<span class="font-black">' + log.kg + ' kg</span>';
+                wList.appendChild(div);
+            });
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.onclick = () => {
+                const view = btn.dataset.view;
+                document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+                document.getElementById('view-' + view).classList.remove('hidden');
+                document.querySelectorAll('.nav-btn').forEach(nb => nb.classList.add('opacity-20'));
+                document.querySelectorAll('.nav-btn').forEach(nb => nb.classList.remove('active-tab'));
+                btn.classList.remove('opacity-20');
+                btn.classList.add('active-tab');
+            };
+        });
+
+        let timer;
+        const ring = document.getElementById('timer-ring');
+        const circ = 816;
+
+        document.getElementById('fast-btn').onclick = function() {
+            if (!state.fasting) {
+                state.fasting = true;
+                state.startTime = Date.now();
+                this.innerText = 'Terminate Fast';
+                this.classList.replace('bg-[#00ff88]', 'bg-white');
+                document.getElementById('timer-status').innerText = 'Elapsed Time';
+                timer = setInterval(updateTimer, 1000);
+            } else {
+                state.fasting = false;
+                this.innerText = 'Initiate Fast';
+                this.classList.replace('bg-white', 'bg-[#00ff88]');
+                document.getElementById('timer-status').innerText = 'Target Remaining';
+                clearInterval(timer);
+                ring.style.strokeDashoffset = circ;
+                document.getElementById('ring-time').innerText = state.goalHours + ':00:00';
+            }
+        };
+
+        function updateTimer() {
+            const elapsed = Date.now() - state.startTime;
+            const totalMs = state.goalHours * 3600000;
+            const progress = Math.min(elapsed / totalMs, 1);
+            ring.style.strokeDashoffset = circ * (1 - progress);
+            const s = Math.floor(elapsed / 1000);
+            const h = Math.floor(s / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const sec = s % 60;
+            document.getElementById('ring-time').innerText = 
+                String(h).padStart(2, '0') + ':' + 
+                String(m).padStart(2, '0') + ':' + 
+                String(sec).padStart(2, '0');
+        }
+
+        document.getElementById('add-fuel').onclick = () => {
+            const name = document.getElementById('food-name').value;
+            const cals = document.getElementById('food-cals').value;
+            if (name && cals) {
+                state.foodLog.unshift({ name, cals, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+                renderLists();
+                document.getElementById('food-name').value = '';
+                document.getElementById('food-cals').value = '';
+            }
+        };
+
+        document.querySelectorAll('.water-btn').forEach(btn => {
+            btn.onclick = () => {
+                state.water += parseFloat(btn.dataset.val);
+                document.getElementById('water-total').innerText = state.water.toFixed(1);
+            };
+        });
+
+        renderProtos();
+        renderLists();
+        document.getElementById('fast-streak').innerText = state.streak + ' Days';
+        document.getElementById('water-total').innerText = state.water.toFixed(1);
+    </script>
+</body>
+</html>
