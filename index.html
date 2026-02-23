@@ -307,8 +307,9 @@
       const pro = document.getElementById('r-pro').textContent;
       const carb = document.getElementById('r-carb').textContent;
       const fat = document.getElementById('r-fat').textContent;
+      const dailyGoal = state.goal
 
-      const prompt = `Act as a specialized nutritionist. I am following a macro protocol of ${state.fastDuration}h. 
+      const prompt = `Act as a specialized nutritionist. I am following a macro protocol of ${state.fastDuration}. 
       My daily targets are: ${totalCal} calories, ${pro} protein, ${carb} carbs, and ${fat} fats.
       Please propose a recipe for each of my meals. 
       Context: my ${focus} should account for ${pct}% of my daily calories. ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
@@ -326,5 +327,6 @@
   </script>
 </body>
 </html>
+
 
 
