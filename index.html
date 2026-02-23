@@ -308,11 +308,11 @@
       const carb = document.getElementById('r-carb').textContent;
       const fat = document.getElementById('r-fat').textContent;
 
-      const prompt = `Act as a specialized nutritionist for ${state.ai}. I am following a fasting protocol of ${state.fastDuration}h. 
+      const prompt = `Act as a specialized nutritionist. I am following a macro protocol of ${state.fastDuration}h. 
       My daily targets are: ${totalCal} calories, ${pro} protein, ${carb} carbs, and ${fat} fats.
-      Please propose a recipe for my ${focus} which should account for ${pct}% of my daily calories.
-      Context: ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
-      Focus on high-nutrient density, biotech-friendly ingredients if possible (like sulforaphane-rich greens or marine proteins). 
+      Please propose a recipe for each of my meals. 
+      Context: my ${focus} should account for ${pct}% of my daily calories. ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
+      Focus on high-nutrient density, low carb if possible, easy to make and friendly ingredients if possible. 
       Provide the recipe name, ingredients, and brief instructions.`;
 
       const area = document.getElementById('prompt-output');
@@ -326,3 +326,4 @@
   </script>
 </body>
 </html>
+
