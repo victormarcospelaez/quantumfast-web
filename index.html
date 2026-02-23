@@ -312,7 +312,7 @@
       My daily targets are: ${totalCal} calories, ${pro} protein, ${carb} carbs, and ${fat} fats.
       Please propose a recipe for each of my meals. 
       Context: my ${focus} should account for ${pct}% of my daily calories. ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
-      Focus on high-nutrient density, low carb if possible, easy to make and friendly ingredients if possible. 
+      Focus on ${longGoal} high-nutrient density, low carb if possible, easy to make and friendly ingredients if possible. 
       Provide the recipe name, ingredients, and brief instructions.`;
 
       const area = document.getElementById('prompt-output');
@@ -326,4 +326,5 @@
   </script>
 </body>
 </html>
+
 
