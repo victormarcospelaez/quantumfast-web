@@ -155,7 +155,7 @@
   </nav>
 
   <script>
-    let state = { units:'metric', weight:80, hCm:178, hFt:5, hIn:10, age:35, sex:'male', goal:'healthy', longGoal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, ai:'GPT' };
+    let state = { units:'metric', weight:180, hCm:181, hFt:5, hIn:11, age:40, sex:'male', goal:'healthy', longGoal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, ai:'GPT' };
     const protocols = [14,16,18,20,24,36,48,72];
     const CIRC = 439.82; 
     let timerInterval = null;
@@ -254,11 +254,11 @@
     }
 
     function calculate() {
-      state.weight = parseFloat(document.getElementById('weight').value) || 80;
-      state.hCm = parseFloat(document.getElementById('height-cm').value) || 178;
+      state.weight = parseFloat(document.getElementById('weight').value) || 180;
+      state.hCm = parseFloat(document.getElementById('height-cm').value) || 181;
       state.hFt = parseInt(document.getElementById('height-ft').value) || 5;
-      state.hIn = parseInt(document.getElementById('height-in').value) || 10;
-      state.age = parseInt(document.getElementById('age').value) || 35;
+      state.hIn = parseInt(document.getElementById('height-in').value) || 11;
+      state.age = parseInt(document.getElementById('age').value) || 40;
       state.sex = document.getElementById('sex').value;
       state.goal = document.getElementById('daily-goal').value;
       state.longGoal = document.getElementById('long-goal').value;
@@ -327,6 +327,7 @@
   </script>
 </body>
 </html>
+
 
 
 
