@@ -1,273 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>QuantumFast Pro</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        :root {
-            --black: #000; --surface: #0a0a0a; --surface2: #111; --surface3: #1a1a1a;
-            --border: rgba(255,255,255,0.07); --border-light: rgba(255,255,255,0.12);
-            --green: #00ff87; --amber: #f59e0b; --blue: #3b82f6; --text: #fff;
-            --text2: rgba(255,255,255,0.55); --red: #ff3b30;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow: hidden; }
-        .view { display: none; height: 100vh; overflow-y: auto; padding: 70px 20px 140px; position: absolute; width: 100%; top: 0; }
-        .view.active { display: block; }
-        .logo { position: fixed; top: 25px; left: 20px; font-size: 16px; font-weight: 900; z-index: 1000; }
-        .logo span { color: var(--green); }
-        .card { background: var(--surface2); border: 1px solid var(--border); padding: 24px; border-radius: 28px; margin-bottom: 16px; position: relative; }
-        .label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text2); letter-spacing: 0.15em; margin-bottom: 15px; }
-        .ring-wrap { position: relative; width: 220px; height: 220px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
-        .ring-content { position: absolute; text-align: center; width: 100%; z-index: 5; }
-        .ring-time { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; line-height: 1; }
-        .btn-main { background: var(--green); border: none; border-radius: 18px; color: #000; font-weight: 900; padding: 18px; width: 100%; cursor: pointer; font-size: 15px; margin-top: 10px; transition: 0.2s; text-align: center; text-decoration: none; display: block; }
-        .btn-main:active { opacity: 0.8; transform: scale(0.98); }
-        .btn-stop { background: var(--red); color: white; }
-        .proto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 25px 0; }
-        .proto-btn { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 12px 5px; border-radius: 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
-        .proto-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,135,0.1); }
-        .ff { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
-        .ff label { font-size: 10px; color: var(--text2); font-weight: 700; text-transform: uppercase; }
-        .ff input, .ff select { width: 100%; background: var(--surface3); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: white; font-size: 15px; outline: none; }
-        .macro-tile { padding: 18px; border-radius: 22px; background: var(--surface3); border: 1px solid var(--border); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(5,5,5,0.95); backdrop-filter: blur(25px); border-top: 1px solid var(--border); padding: 15px 5px 40px; justify-content: space-around; z-index: 2000; }
-        .nav-item { text-align: center; color: var(--text2); opacity: 0.4; font-size: 9px; font-weight: 700; cursor: pointer; width: 20%; }
-        .nav-item.active { opacity: 1; color: var(--green); }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; display: block; }
-        .rank-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--surface3); border-radius: 20px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .rank-num { font-weight: 900; color: var(--green); font-size: 18px; width: 25px; }
-        .rank-pts { margin-left: auto; font-weight: 800; }
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .product-card { background: var(--surface3); border-radius: 22px; padding: 15px; border: 1px solid var(--border); }
-        .product-img { width: 100%; aspect-ratio: 1; background: #222; border-radius: 15px; margin-bottom: 10px; }
-        .workout-card { background: linear-gradient(135deg, #1a1a1a, #000); border: 1px solid var(--green); padding: 20px; border-radius: 25px; margin-bottom: 15px; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>QuantumFast</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+    :root {
+      --black: #000; --surface: #0a0a0a; --surface2: #111; --surface3: #1a1a1a;
+      --border: rgba(255,255,255,0.07); --border-light: rgba(255,255,255,0.12);
+      --green: #00ff87; --amber: #f59e0b; --blue: #3b82f6; --text: #fff; --text2: rgba(255,255,255,0.55);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow: hidden; }
+
+    .view { display: none; height: 100vh; overflow-y: auto; padding: 70px 20px 140px; position: absolute; width: 100%; top: 0; }
+    .view.active { display: block; }
+
+    .logo { position: fixed; top: 25px; left: 20px; font-size: 16px; font-weight: 900; z-index: 1000; }
+    .logo span { color: var(--green); }
+    .card { background: var(--surface2); border: 1px solid var(--border); padding: 24px; border-radius: 28px; margin-bottom: 16px; position: relative; }
+    .label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text2); letter-spacing: 0.15em; margin-bottom: 15px; }
+
+    .ring-wrap { position: relative; width: 220px; height: 220px; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
+    .ring-content { position: absolute; text-align: center; width: 100%; z-index: 5; }
+    .ring-time { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; line-height: 1; }
+    .btn-main { background: var(--green); border: none; border-radius: 18px; color: #000; font-weight: 900; padding: 18px; width: 100%; cursor: pointer; font-size: 15px; margin-top: 10px; transition: 0.2s; }
+    .btn-main:active { opacity: 0.8; transform: scale(0.98); }
+    .btn-stop { background: #ff3b30; color: white; }
+    
+    .proto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 25px 0; }
+    .proto-btn { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 12px 5px; border-radius: 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .proto-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,135,0.1); }
+
+    .ff { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+    .ff label { font-size: 10px; color: var(--text2); font-weight: 700; text-transform: uppercase; }
+    .ff input, .ff select { width: 100%; background: var(--surface3); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: white; font-size: 15px; outline: none; -webkit-appearance: none; }
+    .macro-tile { padding: 18px; border-radius: 22px; background: var(--surface3); border: 1px solid var(--border); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; left: 50%; transform: translateX(-50%); display: flex; background: rgba(5,5,5,0.95); backdrop-filter: blur(25px); border-top: 1px solid var(--border); padding: 15px 5px 40px; justify-content: space-around; z-index: 2000; }
+    .nav-item { text-align: center; color: var(--text2); opacity: 0.4; font-size: 9px; font-weight: 700; cursor: pointer; width: 25%; }
+    .nav-item.active { opacity: 1; color: var(--green); }
+    .nav-icon { font-size: 22px; margin-bottom: 4px; display: block; }
+
+    textarea.prompt-area { width: 100%; background: #000; color: var(--green); border: 1px solid var(--border); border-radius: 14px; padding: 15px; font-family: monospace; font-size: 12px; margin-top: 10px; resize: none; }
+  </style>
 </head>
 <body>
-    <div class=\"logo\">Quantum<span>Fast</span></div>
+  <div class="logo">Quantum<span>Fast</span></div>
 
-    <!-- VIEW: FAST -->
-    <div id=\"view-fast\" class=\"view active\">
-        <div class=\"card\">
-            <div class=\"label\">Protocol _OS_</div>
-            <div id=\"proto-list\" class=\"proto-grid\"></div>
-            <div class=\"ring-wrap\">
-                <svg width=\"220\" height=\"220\"><circle cx=\"110\" cy=\"110\" r=\"70\" fill=\"none\" stroke=\"var(--border-light)\" stroke-width=\"12\"/><circle id=\"ring-fill\" cx=\"110\" cy=\"110\" r=\"70\" fill=\"none\" stroke=\"var(--green)\" stroke-width=\"12\" stroke-dasharray=\"439.82\" stroke-dashoffset=\"439.82\" stroke-linecap=\"round\" transform=\"rotate(-90 110 110)\"/></svg>
-                <div class=\"ring-content\"><div class=\"ring-time\" id=\"ring-time\">00:00:00</div></div>
-            </div>
-            <button class=\"btn-main\" id=\"fast-btn\" onclick=\"toggleFast()\">Start My Fast</button>
+  <!-- VIEW 1: FAST -->
+  <div id="view-fast" class="view active">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Protocol <em>OS</em></h2>
+    <div class="card">
+      <div class="label" id="fast-status">System Ready</div>
+      <div class="ring-wrap">
+        <svg width="220" height="220" viewBox="0 0 160 160" style="display:block;">
+          <circle cx="80" cy="80" r="70" stroke="rgba(255,255,255,0.05)" stroke-width="12" fill="none" />
+          <circle id="ring-fill" cx="80" cy="80" r="70" stroke="#00ff87" stroke-width="12" stroke-linecap="round" fill="none" 
+            stroke-dasharray="439.82" stroke-dashoffset="0" 
+            transform="rotate(-90 80 80)" style="transition: stroke-dashoffset 0.4s linear;" />
+        </svg>
+        <div class="ring-content">
+          <div class="ring-time" id="ring-time">18:00:00</div>
+          <div id="ring-label" style="font-size:11px;color:var(--text2);margin-top:8px;font-weight:600">Goal Set</div>
         </div>
-        <div class=\"card\">
-            <div class=\"label\">Daily Check-in (Community Points)</div>
-            <div class=\"ff\" id=\"fast-male-only\" style=\"display:none\"><label>Did you complete your fast?</label><select id=\"check-fast\"><option value=\"no\">No</option><option value=\"yes\">Yes (+10 pts)</option></select></div>
-            <div class=\"ff\"><label>Daily Challenge Water?</label><select id=\"check-water\"><option value=\"no\">No</option><option value=\"yes\">Yes (+5 pts)</option></select></div>
-            <div class=\"ff\"><label>Macros Fulfilled?</label><select id=\"check-macros\"><option value=\"no\">No</option><option value=\"yes\">Yes (+5 pts)</option></select></div>
-            <button class=\"btn-main\" style=\"background:var(--blue); color:white\" onclick=\"syncPoints()\">Sync Daily Points</button>
-        </div>
+      </div>
+      <div class="proto-grid" id="proto-list"></div>
+      <button class="btn-main" id="fast-btn" onclick="toggleFast()">Start My Fast</button>
+    </div>
+  </div>
+
+  <!-- VIEW 2: FUEL -->
+  <div id="view-fuel" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Nutri<span>Fuel</span></h2>
+    <div class="card">
+      <div class="label">Daily Inputs</div>
+      <div style="display:flex; gap:10px;">
+        <div class="ff" style="flex:1"><label id="w-label">Weight</label><input type="number" id="weight" value="80" oninput="calculate()"></div>
+        <div class="ff" style="flex:1"><label>Goal</label><select id="daily-goal" onchange="calculate()"><option value="healthy">Healthy</option><option value="build">Build</option><option value="define">Define</option></select></div>
+      </div>
+      <div class="ff"><label>Activity Level</label><select id="activity" onchange="calculate()"><option value="sedentary">Sedentary</option><option value="moderate" selected>Moderate</option><option value="high">High</option></select></div>
     </div>
 
-    <!-- VIEW: FUEL -->
-    <div id=\"view-fuel\" class=\"view\">
-        <div class=\"card\">
-            <div class=\"label\">Nutri Fuel</div>
-            <div class=\"ff\"><label id=\"w-label\">Weight (kg)</label><input type=\"number\" id=\"weight\" value=\"80\" oninput=\"calculate()\"></div>
-            <div class=\"ff\"><label>Daily Goal</label><select id=\"daily-goal\" onchange=\"calculate()\"><option value=\"healthy\">Goal Healthy</option><option value=\"build\">Build</option><option value=\"define\">Define</option></select></div>
-            <div class=\"ff\"><label>Activity Level</label><select id=\"activity\" onchange=\"calculate()\"><option value=\"sedentary\">Sedentary</option><option value=\"moderate\" selected>Moderate</option><option value=\"high\">High</option></select></div>
-            <div class=\"macro-tile\"><span>Protein</span><b id=\"r-pro\">0g</b></div>
-            <div class=\"macro-tile\"><span>Carbs</span><b id=\"r-carb\">0g</b></div>
-            <div class=\"macro-tile\"><span>Fats</span><b id=\"r-fat\">0g</b></div>
-            <div class=\"macro-tile\"><span>Daily Calories</span><b id=\"r-cal\">0</b></div>
-        </div>
+    <div id="macro-results" style="margin-bottom:20px">
+      <div class="macro-tile"><span style="color:var(--green)">Protein</span><strong id="r-pro">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--amber)">Carbs</span><strong id="r-carb">0g</strong></div>
+      <div class="macro-tile"><span style="color:var(--blue)">Fats</span><strong id="r-fat">0g</strong></div>
+      <div class="macro-tile"><span>Daily Calories</span><strong id="r-cal">0</strong></div>
     </div>
 
-    <!-- VIEW: COMMUNITY -->
-    <div id=\"view-community\" class=\"view\">
-        <div class=\"card\">
-            <div class=\"label\">Community Leaderboard</div>
-            <div style=\"display:flex; gap:10px; margin-bottom:20px\">
-                <button class=\"proto-btn active\" onclick=\"setRankScope('weekly')\">Weekly</button>
-                <button class=\"proto-btn\" onclick=\"setRankScope('monthly')\">Monthly</button>
-            </div>
-            <div id=\"rank-list\">
-                <div class=\"rank-item\"><div class=\"rank-num\">1</div><div><b>Victor M.</b><br><small>Goal Healthy + Mod</small></div><div class=\"rank-pts\">1,240 pts</div></div>
-                <div class=\"rank-item\"><div class=\"rank-num\">2</div><div><b>Alex R.</b><br><small>Build + High</small></div><div class=\"rank-pts\">1,180 pts</div></div>
-            </div>
-        </div>
-        <div class=\"card\"><div class=\"label\">Your Circles</div><button class=\"btn-main\" style=\"font-size:12px; padding:12px\">Create New Circle +</button></div>
+    <div class="card">
+      <div class="label">Recipe Proposal Questions</div>
+      <div class="ff"><label>Focus Meal</label><select id="q-focus"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option></select></div>
+      <div class="ff"><label>% Calories for Focus Meal</label><input type="number" id="q-pct" value="40" min="10" max="100"></div>
+      <div class="ff"><label>Morning Routine</label><select id="q-morning"><option value="time for breakfast">I have time for breakfast</option><option value="just coffee">Just coffee / fasting</option></select></div>
+      <div class="ff"><label>Time for Lunch?</label><select id="q-lunch-time"><option value="yes">Yes, I have time</option><option value="no">No, something quick</option></select></div>
+      <button class="btn-main" onclick="generatePrompt()">Generate Recipe Prompt</button>
+      <textarea id="prompt-output" class="prompt-area" style="display:none;" readonly></textarea>
     </div>
+  </div>
 
-    <!-- VIEW: WORKOUT -->
-    <div id=\"view-workout\" class=\"view\">
-        <div class=\"card\">
-            <div class=\"label\">Military Challenge</div>
-            <div class=\"workout-card\">
-                <h3>Moderate Intensity</h3>
-                <p style=\"font-size:12px; color:var(--text2); margin:10px 0\">20 Minutes - Bodyweight basics & functional flow.</p>
-                <button class=\"btn-main\" style=\"background:white; color:black; font-size:13px\" onclick=\"startWorkout('mod')\">Start Session</button>
-            </div>
-            <div class=\"workout-card\" style=\"border-color:var(--amber)\">
-                <h3>Intense Challenge</h3>
-                <p style=\"font-size:12px; color:var(--text2); margin:10px 0\">30 Minutes - Military grade HIIT & endurance.</p>
-                <button class=\"btn-main\" style=\"background:var(--amber); color:black; font-size:13px\" onclick=\"startWorkout('intense')\">Unleash Power</button>
-            </div>
-        </div>
+  <!-- VIEW 3: HYDRATE -->
+  <div id="view-hydrate" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">Hydration <em>OS</em></h2>
+    <div class="card" style="text-align: center;">
+      <div class="label">Daily Water Progress</div>
+      <div style="font-size: 48px; font-weight: 900; color: var(--blue); margin: 20px 0;"><span id="water-pct">0</span>%</div>
+      <div style="font-size: 16px; color: var(--text2); font-weight: 600;">
+        <span id="water-current" style="color:var(--blue); font-weight:900">0.0</span> / <span id="water-target">2.5</span> <span id="water-unit">L</span>
+      </div>
+      <div style="display:flex; justify-content: center; gap: 20px; margin-top: 30px;">
+        <button onclick="addWater(-1)" style="width:60px; height:60px; border-radius:20px; border:none; background:var(--surface3); color:white; font-size:24px;">-</button>
+        <button onclick="addWater(1)" style="width:100px; height:60px; border-radius:20px; border:none; background:var(--blue); color:white; font-size:24px; font-weight:900">+</button>
+      </div>
     </div>
+  </div>
 
-    <!-- VIEW: SETUP/SHOP -->
-    <div id=\"view-setup\" class=\"view\">
-        <div class=\"card\">
-            <div class=\"label\">Quantum Shop</div>
-            <div class=\"shop-grid\">
-                <div class=\"product-card\"><div class=\"product-img\"></div><div style=\"font-size:12px; font-weight:800\">Marine Collagen</div><div style=\"color:var(--green); font-size:11px\">$45.00</div></div>
-                <div class=\"product-card\"><div class=\"product-img\"></div><div style=\"font-size:12px; font-weight:800\">Fast Booster</div><div style=\"color:var(--green); font-size:11px\">$29.00</div></div>
-            </div>
-        </div>
-        <div class=\"card\">
-            <div class=\"label\">Profile & Sync</div>
-            <div class=\"ff\"><label>Sex</label><select id=\"sex\" onchange=\"updateSexUI()\"><option value=\"male\">Male</option><option value=\"female\">Female</option></select></div>
-            <button class=\"btn-main\" onclick=\"loginSim()\">Login / Sync Cloud</button>
-        </div>
+  <!-- VIEW 4: SETUP -->
+  <div id="view-setup" class="view">
+    <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1.5px;">System <em>Setup</em></h2>
+    <div class="card">
+      <div class="label">Measurement System</div>
+      <select id="units" onchange="updateUnitUI()" style="margin-bottom:20px; width:100%; background:var(--surface3); color:white; padding:14px; border-radius:14px; border:1px solid var(--border);">
+        <option value="metric">Metric (kg / cm)</option>
+        <option value="imperial">Imperial (lb / ft-in)</option>
+      </select>
+      
+      <div class="label">Biometrics & AI</div>
+      <div class="ff"><label>Sex</label><select id="sex" onchange="calculate()"><option value="male">Male</option><option value="female">Female</option></select></div>
+      <div class="ff"><label>Age</label><input type="number" id="age" value="35" oninput="calculate()"></div>
+      
+      <div class="ff" id="h-metric"><label>Height (cm)</label><input type="number" id="height-cm" value="181" oninput="calculate()"></div>
+      <div id="h-imperial" style="display:none; gap:10px; margin-bottom:15px;">
+        <div class="ff" style="flex:1"><label>Feet</label><input type="number" id="height-ft" value="5" oninput="calculate()"></div>
+        <div class="ff" style="flex:1"><label>Inches</label><input type="number" id="height-in" value="10" oninput="calculate()"></div>
+      </div>
+
+      <div class="ff"><label>Long Term Goal</label><select id="long-goal" onchange="calculate()"><option value="healthy">Maintain Healthy Weight</option><option value="build">Build Muscle / Bulk</option><option value="define">Fat Loss / Definition</option></select></div>
+      
+      <div class="ff"><label>AI Assistant</label><select id="ai-provider"><option value="GPT">ChatGPT (OpenAI)</option><option value="Grok">Grok (xAI)</option><option value="Copilot">Copilot (Microsoft)</option><option value="Gemini">Gemini (Google)</option><option value="Perplexity">Perplexity</option></select></div>
     </div>
+  </div>
 
-    <nav class=\"bottom-nav\">
-        <div class=\"nav-item active\" onclick=\"showView('fast', this)\"><span class=\"nav-icon\">⚡</span>Fast</div>
-        <div class=\"nav-item\" onclick=\"showView('fuel', this)\"><span class=\"nav-icon\">🥗</span>Fuel</div>
-        <div class=\"nav-item\" onclick=\"showView('community', this)\"><span class=\"nav-icon\">👥</span>Social</div>
-        <div class=\"nav-item\" onclick=\"showView('workout', this)\"><span class=\"nav-icon\">🎖️</span>Military</div>
-        <div class=\"nav-item\" onclick=\"showView('setup', this)\"><span class=\"nav-icon\">⚙️</span>Shop</div>
-    </nav>
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="showView('fast', this)"><span class="nav-icon">⚡</span>Fast</div>
+    <div class="nav-item" onclick="showView('fuel', this)"><span class="nav-icon">🥗</span>Fuel</div>
+    <div class="nav-item" onclick="showView('hydrate', this)"><span class="nav-icon">💧</span>Hydrate</div>
+    <div class="nav-item" onclick="showView('setup', this)"><span class="nav-icon">⚙️</span>Setup</div>
+  </nav>
 
-    <script>
-        let state = { units:'metric', weight:80, hCm:181, hFt:5, hIn:11, age:40, sex:'male', goal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, points:0 };
-        const CIRC = 439.82;
-        let timerInterval = null;
+  <script>
+    let state = { units:'metric', weight:80, hCm:181, hFt:5, hIn:11, age:40, sex:'male', goal:'healthy', longGoal:'healthy', activity:'moderate', fastStart:null, fastDuration:18, waterDrank:0, ai:'GPT' };
+    const protocols = [14,16,18,20,24,36,48,72];
+    const CIRC = 439.82; 
+    let timerInterval = null;
 
-        window.onload = () => {
-            const saved = localStorage.getItem('quantumState');
-            if (saved) state = JSON.parse(saved);
-            loadUI();
-            updateSexUI();
-            if (state.fastStart) {
-                document.getElementById('fast-btn').textContent = \"Stop Fast\";
-                document.getElementById('fast-btn').classList.add('btn-stop');
-                runTimerUI();
-            }
-            calculate();
-        };
+    window.onload = () => {
+      const saved = localStorage.getItem('quantumState');
+      if (saved) state = JSON.parse(saved);
+      loadUI();
+      if (state.fastStart) {
+        document.getElementById('fast-btn').textContent = "Stop Fast";
+        document.getElementById('fast-btn').classList.add('btn-stop');
+        runTimerUI();
+      } else {
+        updateRingDisplay(0, state.fastDuration*3600);
+      }
+      calculate();
+    };
 
-        function showView(view, el) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + view).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
+    function showView(view, el) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + view).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function loadUI() {
+      document.getElementById('units').value = state.units;
+      document.getElementById('sex').value = state.sex;
+      document.getElementById('age').value = state.age;
+      document.getElementById('weight').value = state.weight;
+      document.getElementById('height-cm').value = state.hCm;
+      document.getElementById('height-ft').value = state.hFt;
+      document.getElementById('height-in').value = state.hIn;
+      document.getElementById('long-goal').value = state.longGoal;
+      document.getElementById('daily-goal').value = state.goal;
+      document.getElementById('activity').value = state.activity;
+      document.getElementById('ai-provider').value = state.ai || 'GPT';
+      renderProtos();
+      updateUnitUI();
+    }
+
+    function updateUnitUI() {
+      const prevUnits = state.units;
+      const newUnits = document.getElementById('units').value;
+      const weightInput = document.getElementById('weight');   
+      if (prevUnits && prevUnits !== newUnits) {
+        if (prevUnits === 'metric' && newUnits === 'imperial') {
+          // kg → lb
+          state.weight = state.weight * 2.20462;
+        } else if (prevUnits === 'imperial' && newUnits === 'metric') {
+          // lb → kg
+          state.weight = state.weight / 2.20462;
         }
+        weightInput.value = Math.round(state.weight);
+      }
+    
+      state.units = newUnits;
+    
+      document.getElementById('w-label').textContent =
+        state.units === 'metric' ? 'Weight (kg)' : 'Weight (lbs)';
+      document.getElementById('h-metric').style.display =
+        state.units === 'metric' ? 'flex' : 'none';
+      document.getElementById('h-imperial').style.display =
+        state.units === 'imperial' ? 'flex' : 'none';
+      document.getElementById('water-unit').textContent =
+        state.units === 'metric' ? 'L' : 'oz';
+    
+      calculate();
+    }
 
-        function loadUI() {
-            document.getElementById('sex').value = state.sex || 'male';
-            document.getElementById('weight').value = state.weight;
-            document.getElementById('daily-goal').value = state.goal;
-            document.getElementById('activity').value = state.activity;
-        }
+    function renderProtos() {
+      const div = document.getElementById('proto-list');
+      div.innerHTML = protocols.map(h => `<button class="proto-btn ${state.fastDuration==h?'active':''}" onclick="setProto(this, ${h})">${h}h</button>`).join('');
+    }
 
-        function updateSexUI() {
-            state.sex = document.getElementById('sex').value;
-            document.getElementById('fast-male-only').style.display = state.sex === 'male' ? 'block' : 'none';
-            save();
-        }
+    function setProto(btn, h) {
+      if (state.fastStart) return;
+      state.fastDuration = h;
+      document.querySelectorAll('.proto-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateRingDisplay(0, h * 3600);
+      save();
+    }
 
-        function toggleFast() {
-            if (state.fastStart) {
-                state.fastStart = null;
-                clearInterval(timerInterval);
-                document.getElementById('fast-btn').textContent = \"Start My Fast\";
-                document.getElementById('fast-btn').classList.remove('btn-stop');
-                updateRingDisplay(0, state.fastDuration * 3600);
-            } else {
-                state.fastStart = Date.now();
-                document.getElementById('fast-btn').textContent = \"Stop Fast\";
-                document.getElementById('fast-btn').classList.add('btn-stop');
-                runTimerUI();
-            }
-            save();
-        }
+    function updateRingDisplay(elapsed, total) {
+      const ratio = Math.min(elapsed / total, 1);
+      const rem = Math.max(0, total - elapsed);
+      const h = Math.floor(rem / 3600);
+      const m = Math.floor((rem % 3600) / 60);
+      const s = Math.floor(rem % 60);
+      document.getElementById('ring-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      document.getElementById('ring-fill').setAttribute('stroke-dashoffset', CIRC * ratio);
+    }
 
-        function runTimerUI() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (!state.fastStart) return;
-                updateRingDisplay((Date.now() - state.fastStart) / 1000, state.fastDuration * 3600);
-            }, 1000);
-        }
+    function toggleFast() {
+      if (state.fastStart) {
+        state.fastStart = null; clearInterval(timerInterval);
+        document.getElementById('fast-btn').textContent = "Start My Fast";
+        document.getElementById('fast-btn').classList.remove('btn-stop');
+        updateRingDisplay(0, state.fastDuration * 3600);
+      } else {
+        state.fastStart = Date.now();
+        document.getElementById('fast-btn').textContent = "Stop Fast";
+        document.getElementById('fast-btn').classList.add('btn-stop');
+        runTimerUI();
+      }
+      save();
+    }
 
-        function updateRingDisplay(elapsed, total) {
-            const ratio = Math.min(elapsed / total, 1);
-            const rem = Math.max(0, total - elapsed);
-            const h = Math.floor(rem / 3600);
-            const m = Math.floor((rem % 3600) / 60);
-            const s = Math.floor(rem % 60);
-            document.getElementById('ring-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            document.getElementById('ring-fill').setAttribute('stroke-dashoffset', CIRC * (1 - ratio));
-        }
+    function runTimerUI() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!state.fastStart) return;
+        updateRingDisplay((Date.now() - state.fastStart) / 1000, state.fastDuration * 3600);
+      }, 1000);
+    }
 
-        function calculate() {
-            state.weight = parseFloat(document.getElementById('weight').value) || 80;
-            state.goal = document.getElementById('daily-goal').value;
-            state.activity = document.getElementById('activity').value;
-            
-            let wKg = state.weight;
-            const bmr = (10 * wKg) + (6.25 * 181) - (5 * state.age) + (state.sex === 'male' ? 5 : -161);
-            const mults = { sedentary: 1.2, moderate: 1.55, high: 1.725 };
-            let cal = bmr * mults[state.activity];
-            
-            if (state.goal === 'build') cal += 250;
-            if (state.goal === 'define') cal -= 250;
+    function calculate() {
+      state.weight = parseFloat(document.getElementById('weight').value) || 180;
+      state.hCm = parseFloat(document.getElementById('height-cm').value) || 181;
+      state.hFt = parseInt(document.getElementById('height-ft').value) || 5;
+      state.hIn = parseInt(document.getElementById('height-in').value) || 11;
+      state.age = parseInt(document.getElementById('age').value) || 40;
+      state.sex = document.getElementById('sex').value;
+      state.goal = document.getElementById('daily-goal').value;
+      state.longGoal = document.getElementById('long-goal').value;
+      state.activity = document.getElementById('activity').value;
+      state.ai = document.getElementById('ai-provider').value;
 
-            document.getElementById('r-cal').textContent = Math.round(cal);
-            document.getElementById('r-pro').textContent = Math.round((cal * 0.3) / 4) + 'g';
-            document.getElementById('r-carb').textContent = Math.round((cal * 0.45) / 4) + 'g';
-            document.getElementById('r-fat').textContent = Math.round((cal * 0.25) / 9) + 'g';
-            save();
-        }
+      let wKg = state.units === 'metric' ? state.weight : state.weight / 2.20462;
+      let hTotalCm = state.units === 'metric' ? state.hCm : (state.hFt * 30.48) + (state.hIn * 2.54);
+      
+      const bmr = (10 * wKg) + (6.25 * hTotalCm) - (5 * state.age) + (state.sex === 'male' ? 5 : -161);
+      const mults = { sedentary: 1.2, moderate: 1.55, high: 1.725 };
+      let cal = bmr * mults[state.activity];
+      
+      if (state.goal === 'build') cal += 250;
+      if (state.goal === 'define') cal -= 250;
 
-        function syncPoints() {
-            let pts = 0;
-            if (state.sex === 'male' && document.getElementById('check-fast').value === 'yes') pts += 10;
-            if (document.getElementById('check-water').value === 'yes') pts += 5;
-            if (document.getElementById('check-macros').value === 'yes') pts += 5;
+      document.getElementById('r-cal').textContent = Math.round(cal);
+      document.getElementById('r-pro').textContent = Math.round((cal * 0.3) / 4) + 'g';
+      document.getElementById('r-carb').textContent = Math.round((cal * 0.45) / 4) + 'g';
+      document.getElementById('r-fat').textContent = Math.round((cal * 0.25) / 9) + 'g';
+      
+      state.waterTarget = wKg * 0.033;
+      updateWaterUI();
+      save();
+    }
 
-            const multipliers = {
-                'healthy_moderate': 1.4, 'healthy_high': 1.3,
-                'build_high': 1.2, 'build_moderate': 1.1,
-                'define_moderate': 1.0, 'define_high': 0.9,
-                'sedentary': 0.7
-            };
+    function addWater(n) { 
+      let inc = state.units === 'metric' ? 0.25 : 8;
+      state.waterDrank = Math.max(0, state.waterDrank + (n * inc)); 
+      updateWaterUI(); save(); 
+    }
 
-            let key = state.activity === 'sedentary' ? 'sedentary' : state.goal + '_' + state.activity;
-            let mult = multipliers[key] || 1.0;
-            
-            let dailyTotal = Math.round(pts * mult);
-            state.points += dailyTotal;
-            alert(`Points Synced! +${dailyTotal} points for today. Total: ${state.points}`);
-            save();
-        }
+    function updateWaterUI() {
+      let targetVal = state.units === 'metric' ? state.waterTarget : state.waterTarget * 33.814;
+      document.getElementById('water-target').textContent = targetVal.toFixed(1);
+      document.getElementById('water-current').textContent = state.waterDrank.toFixed(state.units==='metric'?2:0);
+      document.getElementById('water-pct').textContent = Math.round((state.waterDrank / targetVal) * 100);
+    }
 
-        function loginSim() {
-            const email = prompt(\"Enter your email to sync circles:\");
-            if (email) alert(\"Login successful! Circles synced.\");
-        }
+    function generatePrompt() {
+      const focus = document.getElementById('q-focus').value;
+      const pct = document.getElementById('q-pct').value;
+      const morning = document.getElementById('q-morning').value;
+      const lunchTime = document.getElementById('q-lunch-time').value;
+      const totalCal = document.getElementById('r-cal').textContent;
+      const pro = document.getElementById('r-pro').textContent;
+      const carb = document.getElementById('r-carb').textContent;
+      const fat = document.getElementById('r-fat').textContent;
+      const dailyGoal = state.goal;
 
-        function startWorkout(type) {
-            alert(`Starting Military ${type === 'mod' ? 'Moderate' : 'Intense'} session... Stay focused!`);
-        }
+      const prompt = `Act as a specialized nutritionist. I am following a macro protocol of ${state.fastDuration}. 
+      My daily targets are: ${totalCal} calories, ${pro} protein, ${carb} carbs, and ${fat} fats.
+      Please propose a recipe for each of my meals. 
+      Context: my ${focus} should account for ${pct}% of my daily calories. ${morning} in the morning. ${lunchTime === 'yes' ? 'I have enough time for a proper lunch' : 'I need a very quick lunch'}.
+      Focus on ${dailyGoal} high-nutrient density, low carb if possible, easy to make and friendly ingredients if possible. 
+      Provide the recipe name, ingredients, and brief instructions.`;
 
-        function save() { localStorage.setItem('quantumState', JSON.stringify(state)); }
-    </script>
+      const area = document.getElementById('prompt-output');
+      area.value = prompt;
+      area.style.display = 'block';
+      area.select();
+      alert('Prompt generated and copied to area below. Use it with your selected AI!');
+    }
+
+    function save() { localStorage.setItem('quantumState', JSON.stringify(state)); }
+  </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
